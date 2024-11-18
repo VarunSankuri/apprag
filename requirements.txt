@@ -1,0 +1,11 @@
+streamlit
+google-cloud-aiplatform
+google-cloud-logging
+langchain
+google-generativeai
+streamlit
+langchain-google-genai
+python-dotenv
+chromadb
+pypdf
+PyPDF2
