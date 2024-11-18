@@ -22,7 +22,8 @@ st.caption("Frustrated with ChatGPT and Gemini giving you outdated cloud info? B
 load_dotenv()
 
 # Retrieve API key from environment variable
-google_api_key = os.getenv("GOOGLE_API_KEY")
+# google_api_key = os.getenv("GOOGLE_API_KEY")
+google_api_key = st.secrets["GOOGLE_API_KEY"]
 
 # Check if the API key is available
 if google_api_key is None:
