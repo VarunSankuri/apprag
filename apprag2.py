@@ -8,6 +8,12 @@ from dotenv import load_dotenv
 import PyPDF2
 import os
 import io
+from langchain_community.vectorstores import Chroma
+import pysqlite3  # Add this import
+import sys       # Add this import
+
+# Swap sqlite3 with pysqlite3-binary
+sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 
 # import chromadb
 
