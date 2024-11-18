@@ -9,9 +9,9 @@ import PyPDF2
 import os
 import io
 
-import chromadb
+# import chromadb
 
-chromadb.api.client.SharedSystemClient.clear_system_cache()
+# chromadb.api.client.SharedSystemClient.clear_system_cache()
 
 st.title("CloudCurrent")
 st.caption("Frustrated with ChatGPT and Gemini giving you outdated cloud info? Big box models can't keep up with the Cloud's rapid pace."
