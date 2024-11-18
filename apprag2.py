@@ -15,9 +15,9 @@ import sys       # Add this import
 # Swap sqlite3 with pysqlite3-binary
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 
-# import chromadb
+import chromadb
 
-# chromadb.api.client.SharedSystemClient.clear_system_cache()
+chromadb.api.client.SharedSystemClient.clear_system_cache()
 
 st.title("CloudCurrent")
 st.caption("Frustrated with ChatGPT and Gemini giving you outdated cloud info? Big box models can't keep up with the Cloud's rapid pace."
