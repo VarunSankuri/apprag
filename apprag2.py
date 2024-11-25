@@ -96,8 +96,11 @@ with tab2:
         with st.chat_message("user"):
             st.markdown(question)
 
-        # Get Relevant Documents
-        docs = vector_index.get_relevant_documents(question)
+        # Get Relevant Documents (only if files were uploaded)
+        if uploaded_files:
+            docs = vector_index.get_relevant_documents(question)
+        else:
+            docs = []  # No documents to provide
 
         # Define Prompt Template
         prompt_template = """
