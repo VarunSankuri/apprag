@@ -19,8 +19,10 @@ import chromadb
 
 chromadb.api.client.SharedSystemClient.clear_system_cache()
 
-st.title("CloudCurrent")
-st.caption("Frustrated with ChatGPT and Gemini giving you outdated cloud info? Big box models can't keep up with the Cloud's rapid pace."
+st.title("Cloud Current")
+st.markdown("# This is a large heading")
+st.markdown("## This is a smaller heading")
+st.caption("Frustrated with ChatGPT and Google Gemini giving you outdated cloud info? Big box models can't keep up with the Cloud's rapid pace."
            " CloudCurrent is updated much more frequently and also lets you upload your OWN PDFs to get the most accurate, "
            "up-to-the-minute answers. Try it now!")
 
