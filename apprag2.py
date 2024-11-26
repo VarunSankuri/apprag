@@ -45,10 +45,10 @@ if google_api_key is None:
     st.stop()
 
 tab1, tab2 = st.tabs(
-    ["Upload PDF Files", "Chat Bot"]
+    [ "Chat Bot","Upload PDF Files"]
 )
 
-with tab1:
+with tab2:
     # File Upload with multiple file selection
     uploaded_files = st.file_uploader("Upload PDF files", type=["pdf"], accept_multiple_files=True)
 
@@ -78,7 +78,7 @@ with tab1:
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         vector_index = Chroma.from_texts(texts, embeddings).as_retriever()
 
-with tab2:
+with tab1:
     # Initialize chat history
     if "messages" not in st.session_state:
         st.session_state.messages = []
