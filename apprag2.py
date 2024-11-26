@@ -49,8 +49,7 @@ tab1, tab2 = st.tabs(
 )
 
 with tab2:
-    st.markdown('<p class="big-font">Although not necessary,
-    If you want to add more context to your questions, you can upload PDF's below for more accurate answers</p>', unsafe_allow_html=True)
+    st.markdown('<p class="big-font">Although not necessary, if you want to add more context to your questions, you can upload PDF's below for more accurate answers</p>', unsafe_allow_html=True)
     # File Upload with multiple file selection
     uploaded_files = st.file_uploader("Upload PDF files", type=["pdf"], accept_multiple_files=True)
 
