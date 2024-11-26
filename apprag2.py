@@ -49,6 +49,7 @@ tab1, tab2 = st.tabs(
 )
 
 with tab2:
+    st.header("Although not necessary, you can upload your PDFs here to get more accurate answers/code")
     # File Upload with multiple file selection
     uploaded_files = st.file_uploader("Upload PDF files", type=["pdf"], accept_multiple_files=True)
 
