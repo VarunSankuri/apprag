@@ -90,7 +90,7 @@ with tab1:
             st.markdown(message["content"])
 
     # Get user input
-    if question := st.chat_input("Ask your Cloud related questions here. For e.g. What is the AWS version of Google Firebase?"):
+    if question := st.chat_input("Ask your Cloud related questions here. For e.g. AWS Cognito v/s Google Firebase"):
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": question})
         # Display user message in chat message container
