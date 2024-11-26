@@ -89,7 +89,7 @@ with tab1:
             st.markdown(message["content"])
 
     # Get user input
-    if question := st.chat_input("Ask your questions here!"):
+    if question := st.chat_input("Ask your Cloud related questions here!"):
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": question})
         # Display user message in chat message container
