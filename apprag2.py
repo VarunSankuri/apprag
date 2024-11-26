@@ -29,8 +29,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 st.markdown('<p class="big-font">Developed by Varun Sankuri</p>', unsafe_allow_html=True)
 st.caption("Frustrated with ChatGPT and Google Gemini giving you outdated cloud info? Big box models can't keep up with the Cloud's rapid pace."
-           " CloudCurrent is updated much more frequently and also lets you upload your OWN PDFs to get the most accurate, "
-           "up-to-the-minute answers. Try it now!)
+           " CloudCurrent is updated much more frequently and also lets you upload your OWN PDFs to get the most accurate,"
+           "'up-to-the-minute answers'. Try it now!")
 st.cation("For questions contact cloudcurrent@gmail.com")
 
 # Load environment variables from .env file
