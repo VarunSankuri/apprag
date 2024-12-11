@@ -57,7 +57,7 @@ with tab3:
 }
 </style>
 """, unsafe_allow_html=True)
-st.markdown('<p class="big-font">This space is under construction</p>', unsafe_allow_html=True)
+    st.markdown('<p class="big-font">This space is under construction</p>', unsafe_allow_html=True)
     st.caption(
                "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one. Build your skills and knowledge in a risk-free environment.")
 with tab2:
