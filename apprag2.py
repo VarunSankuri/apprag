@@ -59,7 +59,20 @@ with tab3:
 """, unsafe_allow_html=True)
     st.markdown('<p class="big-font">This space is under construction</p>', unsafe_allow_html=True)
     st.caption(
-               "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one. Build your skills and knowledge in a risk-free environment.")
+               "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one."
+      "Build your skills and knowledge in a risk-free environment.")
+with tab4:
+    st.markdown("""
+<style>
+.big-font {
+  font-size:20px !important;
+}
+</style>
+""", unsafe_allow_html=True)
+    st.markdown('<p class="big-font">This space is under construction</p>', unsafe_allow_html=True)
+    st.caption(
+               "Overwhelmed by complex business decisions? Cloud Current simplifies cost analysis, architecture design, and more."
+      "Make data-driven choices with confidence using our intuitive tools and visualizations.  Try it for free and see the difference Cloud Current can make in your business.")
 with tab2:
     st.caption("Although not necessary, you can upload your PDFs here to get more accurate answers/code")
     # File Upload with multiple file selection
