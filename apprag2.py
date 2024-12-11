@@ -46,8 +46,8 @@ if google_api_key is None:
     st.warning("API key not found. Please set the google_api_key environment variable.")
     st.stop()
 
-tab1, tab2 = st.tabs(
-    [ "Chat Bot","Upload PDF Files"]
+tab1, tab2,tab3,tab4 = st.tabs(
+    [ "Chat Bot","Upload PDF Files","Learning Space for Students","Decision Support for Organizations"]
 )
 
 with tab2:
