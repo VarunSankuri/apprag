@@ -31,6 +31,7 @@ st.markdown('<p class="big-font">Developed by Varun Sankuri</p>', unsafe_allow_h
 st.caption("Frustrated with ChatGPT and Google Gemini giving you outdated cloud info? Big box models can't keep up with the Cloud's rapid pace."
            " CloudCurrent is updated much more frequently and also lets you upload your OWN PDFs to get the most accurate, "
            "'up-to-the-minute answers'. Try it now!")
+st.caption("Example questions: Compare S3 storage classes and their use cases, or upload a file and ask the bot to "Summarize the file")
 st.caption("For questions contact cloudcurrentapp@gmail.com")
 
 # Load environment variables from .env file
@@ -91,7 +92,7 @@ with tab1:
             st.markdown(message["content"])
 
     # Get user input
-    if question := st.chat_input("Ask your Cloud related questions here. For e.g. AWS Cognito v/s Google Firebase"):
+    if question := st.chat_input("Ask your Cloud related questions here. For e.g. Compare AWS S3 storage classes and their use cases"):
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": question})
         # Display user message in chat message container
