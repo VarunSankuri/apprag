@@ -49,7 +49,9 @@ if google_api_key is None:
 tab1, tab2,tab3,tab4 = st.tabs(
     [ "Chat Bot","Upload PDF Files","Learning Space for Students","Decision Support for Organizations"]
 )
-
+with tab3:
+    st.caption("This space is under construction. We will be using Agents to build a structured learning path for developers/students new to Cloud development/deployment"
+    "and help them experience different cloud providers without making the choice of a cloud provider")
 with tab2:
     st.caption("Although not necessary, you can upload your PDFs here to get more accurate answers/code")
     # File Upload with multiple file selection
