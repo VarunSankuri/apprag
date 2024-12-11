@@ -50,8 +50,16 @@ tab1, tab2,tab3,tab4 = st.tabs(
     [ "Chat Bot","Upload PDF Files","Learning Space for Students","Decision Support for Organizations"]
 )
 with tab3:
-    st.caption("This space is under construction. We will be using Agents to build a structured learning path for developers/students new to Cloud development/deployment"
-    "and help them experience different cloud providers without making the choice of a cloud provider")
+    st.markdown("""
+<style>
+.big-font {
+  font-size:20px !important;
+}
+</style>
+""", unsafe_allow_html=True)
+st.markdown('<p class="big-font">This space is under construction</p>', unsafe_allow_html=True)
+    st.caption(
+               "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one. Build your skills and knowledge in a risk-free environment.")
 with tab2:
     st.caption("Although not necessary, you can upload your PDFs here to get more accurate answers/code")
     # File Upload with multiple file selection
