@@ -204,13 +204,19 @@ with tab3:
         # Check if the LLM deems the answer sufficient
         # (This is a simplified check, you might need more sophisticated evaluation logic)
         if "correct" in response.lower(): 
-            st.success("Correct! Moving on to the next question.")  # <-- Clear success message
-            if st.session_state.current_step < len(curriculum):
-                st.session_state.current_step += 1
+            st.success("Correct! Moving on to the next question.") 
+
+            # Increment the current step *before* displaying the next question 
+            st.session_state.current_step += 1  # <-- Moved this line up
+
+            # Check if there are more questions
+            if st.session_state.current_step <= len(curriculum):  
+                st.write(f"**Curriculum Step {st.session_state.current_step}:**", unsafe_allow_html=True)
+                st.markdown(curriculum[st.session_state.current_step]["question"], unsafe_allow_html=True) 
             else:
                 st.write("Congratulations! You have completed the curriculum.")
         else:
-            st.error("Incorrect. Please try again.")  # <-- Clear error message
+            st.error("Incorrect. Please try again.") 
 
 with tab4:
     st.markdown("""
