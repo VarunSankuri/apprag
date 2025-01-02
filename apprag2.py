@@ -101,7 +101,7 @@ with tab3:
         model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=1, api_key=google_api_key)
 
         # Initialize the agent with tools
-        tools = load_tools(["python_repl", "google_search"], llm=model)
+        tools = load_tools(["python_repl"], llm=model)
         agent = initialize_agent(tools, model, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
 
         # Get the response
