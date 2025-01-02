@@ -65,19 +65,17 @@ with tab3:
     st.caption(
                "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one."
       "Build your skills and knowledge in a risk-free environment.")
-
   
+search = GoogleSearchAPIWrapper()
 
-  search = GoogleSearchAPIWrapper()
-
-  tool = Tool(
+tool = Tool(
     name="google_search",
     description="Search Google for recent results.",
     func=search.run,
   )
   
   # Simple Curriculum (assuming zero cloud development experience)
-    curriculum = {
+curriculum = {
         1: "What is Cloud Computing?",
         2: "What are the different types of Cloud Services (IaaS, PaaS, SaaS)?",
         3: "Who are the major Cloud Providers (AWS, Azure, GCP)?",
