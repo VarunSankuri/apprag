@@ -10,16 +10,14 @@ import os
 import io
 from langchain_community.vectorstores import Chroma
 import pysqlite3  # Add this import
-import sys       # Add this import
-from langchain.agents import AgentType, create_json_agent, initialize_agent, load_tools
+import sys      # Add this import
+from langchain.agents import AgentType, initialize_agent, load_tools
 from langchain_community.utilities import GoogleSearchAPIWrapper
-from langchain_core.tools import Tool
 
 # Swap sqlite3 with pysqlite3-binary
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 
 import chromadb
-
 
 chromadb.api.client.SharedSystemClient.clear_system_cache()
 
@@ -27,14 +25,14 @@ st.title("Cloud Current")
 st.markdown("""
 <style>
 .big-font {
-  font-size:20px !important;
+    font-size:20px !important;
 }
 </style>
 """, unsafe_allow_html=True)
 st.markdown('<p class="big-font">Developed by Varun Sankuri</p>', unsafe_allow_html=True)
 st.caption("Frustrated with ChatGPT and Google Gemini giving you outdated cloud info? Big box models can't keep up with the Cloud's rapid pace."
-           " CloudCurrent is updated much more frequently and also lets you upload your OWN PDFs to get the most accurate, "
-           "'up-to-the-minute answers'. Try it now!")
+            " CloudCurrent is updated much more frequently and also lets you upload your OWN PDFs to get the most accurate, "
+            "'up-to-the-minute answers'. Try it now!")
 st.caption("Example questions: Compare S3 storage classes and their use cases, or upload a file and ask the bot to Summarize the file")
 st.caption("For questions contact cloudcurrentapp@gmail.com")
 
@@ -50,32 +48,29 @@ if google_api_key is None:
     st.warning("API key not found. Please set the google_api_key environment variable.")
     st.stop()
 
-tab1, tab2,tab3,tab4 = st.tabs(
-    [ "Chat Bot","Upload PDF Files","Learning Space for Students","Decision Support for Organizations"]
+tab1, tab2, tab3, tab4 = st.tabs(
+    ["Chat Bot", "Upload PDF Files", "Learning Space for Students", "Decision Support for Organizations"]
 )
+
 with tab3:
     st.markdown("""
-<style>
-.big-font {
-  font-size:20px !important;
-}
-</style>
-""", unsafe_allow_html=True)
-    st.markdown('<p class="big-font">This space is under construction</p>', unsafe_allow_html=True)
+    <style>
+    .big-font {
+        font-size:20px !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    # st.markdown('<p class="big-font">This space is under construction</p>', unsafe_allow_html=True)
     st.caption(
-               "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one."
-      "Build your skills and knowledge in a risk-free environment.")
-  
-search = GoogleSearchAPIWrapper()
+            "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one."
+            "Build your skills and knowledge in a risk-free environment.")
 
-tool = Tool(
-    name="google_search",
-    description="Search Google for recent results.",
-    func=search.run,
-  )
-  
-  # Simple Curriculum (assuming zero cloud development experience)
-curriculum = {
+    # Initialize Google Search tool
+    search = GoogleSearchAPIWrapper()
+    tools = load_tools(["google_search"], llm=model) 
+
+    # Simple Curriculum (assuming zero cloud development experience)
+    curriculum = {
         1: "What is Cloud Computing?",
         2: "What are the different types of Cloud Services (IaaS, PaaS, SaaS)?",
         3: "Who are the major Cloud Providers (AWS, Azure, GCP)?",
@@ -83,8 +78,8 @@ curriculum = {
         5: "Can you explain some common Cloud Computing use cases?"
     }
 
-if "current_step" not in st.session_state:
-    st.session_state.current_step = 1
+    if "current_step" not in st.session_state:
+        st.session_state.current_step = 1
 
     # Display current curriculum step
     st.write(f"**Curriculum Step {st.session_state.current_step}:** {curriculum[st.session_state.current_step]}")
@@ -107,11 +102,10 @@ if "current_step" not in st.session_state:
             st.markdown(question)
 
         # Load the model
-        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=1, api_key=google_api_key)
+        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key)
 
-        # Initialize the agent with tools
-        # tools = load_tools(["python_repl"], llm=model)
-        agent = initialize_agent(tool, model, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+        # Initialize the agent with tools 
+        agent = initialize_agent(tools, model, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
 
         # Get the response
         response = agent.run(question)
@@ -127,21 +121,21 @@ if "current_step" not in st.session_state:
             st.session_state.current_step += 1
         else:
             st.write("Congratulations! You have completed the curriculum.")
-    # --- CHANGES END HERE ---
 
 
 with tab4:
     st.markdown("""
-<style>
-.big-font {
-  font-size:20px !important;
-}
-</style>
-""", unsafe_allow_html=True)
+    <style>
+    .big-font {
+        font-size:20px !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
     st.markdown('<p class="big-font">This space is under construction</p>', unsafe_allow_html=True)
     st.caption(
-               "Overwhelmed by complex business decisions? Cloud Current simplifies cost analysis, architecture design, and more."
-      "Make data-driven choices with confidence using our intuitive tools and visualizations.  Try it for free and see the difference Cloud Current can make in your business.")
+            "Overwhelmed by complex business decisions? Cloud Current simplifies cost analysis, architecture design, and more."
+            "Make data-driven choices with confidence using our intuitive tools and visualizations.  Try it for free and see the difference Cloud Current can make in your business.")
+
 with tab2:
     st.caption("Although not necessary, you can upload your PDFs here to get more accurate answers/code")
     # File Upload with multiple file selection
