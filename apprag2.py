@@ -157,6 +157,11 @@ with tab3:
     st.write(f"**Curriculum Step {st.session_state.current_step}:**", unsafe_allow_html=True) 
     st.markdown(curriculum[st.session_state.current_step]["question"], unsafe_allow_html=True)
 
+    # Display hints (using st.expander for better organization)
+    with st.expander("Hints"): 
+        for hint in curriculum[st.session_state.current_step]["hints"]:
+            st.markdown(hint, unsafe_allow_html=True)
+
 
     # Initialize chat history
     if "messages" not in st.session_state:
