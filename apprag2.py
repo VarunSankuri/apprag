@@ -219,23 +219,19 @@ with tab3:
                     for hint in curriculum[st.session_state.current_step]["hints"]:
                         st.markdown(hint, unsafe_allow_html=True)
 
-                # Add a delay to allow the UI to update before scrolling
-                # time.sleep(0.1)  # You might need to adjust the delay
-
-                # Scroll to the bottom of the page
-                st.markdown("<script>window.scrollTo(0, document.body.scrollHeight);</script>", unsafe_allow_html=True)  # <-- Added this line
 
             else:
                 st.write("Congratulations! You have completed the curriculum.")
         else:
             st.error("Incorrect. Please try again.")
 
-            # Add a delay to allow the UI to update before scrolling
-            time.sleep(0.5)  # You might need to adjust the delay
 
-            # Scroll to the bottom of the page
-            st.markdown("<script>window.scrollTo(0, document.body.scrollHeight);</script>", unsafe_allow_html=True)  # <-- Added this line
- 
+        # Add a delay to allow the UI to update before scrolling
+        # time.sleep(0.1)  # You might need to adjust the delay
+
+        # Scroll to the bottom of the page  <-- Moved this block outside the if-else
+        st.markdown("<script>window.scrollTo(0, document.body.scrollHeight);</script>", unsafe_allow_html=True) 
+
 
 with tab4:
     st.markdown("""
