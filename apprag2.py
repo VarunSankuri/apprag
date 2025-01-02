@@ -64,6 +64,17 @@ with tab3:
     st.caption(
                "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one."
       "Build your skills and knowledge in a risk-free environment.")
+
+  from langchain_community.utilities import GoogleSearchAPIWrapper
+  from langchain_core.tools import Tool
+
+  search = GoogleSearchAPIWrapper()
+
+  tool = Tool(
+    name="google_search",
+    description="Search Google for recent results.",
+    func=search.run,
+  )
   
   # Simple Curriculum (assuming zero cloud development experience)
     curriculum = {
@@ -101,8 +112,8 @@ with tab3:
         model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=1, api_key=google_api_key)
 
         # Initialize the agent with tools
-        tools = load_tools(["python_repl"], llm=model)
-        agent = initialize_agent(tools, model, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+        # tools = load_tools(["python_repl"], llm=model)
+        agent = initialize_agent(tool, model, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
 
         # Get the response
         response = agent.run(question)
