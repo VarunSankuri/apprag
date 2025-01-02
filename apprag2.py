@@ -89,7 +89,7 @@ with tab3:
             st.markdown(message["content"])
 
     # Get user input
-    if question := st.chat_input("Ask your question here:"):
+    if question := st.chat_input("Answer the question here:"):
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": question})
         # Display user message in chat message container
