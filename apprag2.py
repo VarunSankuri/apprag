@@ -66,7 +66,7 @@ with tab3:
             "Build your skills and knowledge in a risk-free environment.")
 
     # Initialize Google Search tool
-    search = GoogleSearchAPIWrapper()
+    search = GoogleSearchAPIWrapper(google_api_key=google_api_key)
     tools = load_tools(["google_search"], llm=model) 
 
     # Simple Curriculum (assuming zero cloud development experience)
