@@ -61,6 +61,38 @@ with tab3:
     st.caption(
                "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one."
       "Build your skills and knowledge in a risk-free environment.")
+  # Initialize chat history
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    # Display chat messages from history
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    # Get user input
+    if question := st.chat_input("What do you want to learn about Cloud today?"):
+        # Add user message to chat history
+        st.session_state.messages.append({"role": "user", "content": question})
+        # Display user message in chat message container
+        with st.chat_message("user"):
+            st.markdown(question)
+
+        # Load the model
+        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key)
+
+        # Initialize the agent with tools
+        tools = load_tools(["python_repl", "google_search"], llm=model)
+        agent = initialize_agent(tools, model, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+
+        # Get the response
+        response = agent.run(question)
+
+        # Add assistant response to chat history
+        st.session_state.messages.append({"role": "assistant", "content": response})
+        # Display assistant response in chat message container
+        with st.chat_message("assistant"):
+            st.write(response)
 with tab4:
     st.markdown("""
 <style>
