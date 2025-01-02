@@ -100,15 +100,19 @@ with tab3:
         # Load the LLM
         model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key)
 
-        # Construct the prompt with the curriculum step and the base prompt
-        prompt = f"""You are a helpful AI assistant helping train people on Cloud development and deployment. If the user gets stuck on something,
-        try to nod them in the right direction.
+        # Construct the prompt with the curriculum step, user question, and evaluation instructions
+        prompt = f"""You are a helpful AI assistant helping train people on Cloud development and deployment. 
 
         Curriculum Step {st.session_state.current_step}: {curriculum[st.session_state.current_step]}
 
-        User Question: {question}
+        User Answer: {question}
 
-        Answer:"""
+        Evaluate the user's answer to the curriculum question. 
+        The answer should be comprehensive and accurate.
+        Provide feedback to the user, including whether the answer is correct or needs improvement.
+        If the answer needs improvement, provide specific guidance on what to improve. 
+
+        Evaluation and Feedback:""" 
 
         # Get the response
         response = model.predict(prompt)
@@ -119,11 +123,15 @@ with tab3:
         with st.chat_message("assistant"):
             st.write(response)
 
-        # Move to the next step in the curriculum
-        if st.session_state.current_step < len(curriculum):
-            st.session_state.current_step += 1
-        else:
-            st.write("Congratulations! You have completed the curriculum.")
+        # Check if the LLM deems the answer sufficient
+        # **(This is a simplified check, you might need more sophisticated evaluation logic)**
+        if "correct" in response.lower(): 
+            # Move to the next step in the curriculum
+            if st.session_state.current_step < len(curriculum):
+                st.session_state.current_step += 1
+            else:
+                st.write("Congratulations! You have completed the curriculum.")
+        # else:  # (Optional) You can add a message here like "Try again!" if the answer is not correct
 
 with tab4:
     st.markdown("""
