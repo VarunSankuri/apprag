@@ -67,7 +67,7 @@ with tab3:
 
     # Simple Curriculum
     curriculum = {
-        1: "What is Cloud Computing?",
+        1: "What is your understanding of Cloud Computing?",
         2: "What are the different types of Cloud Services (IaaS, PaaS, SaaS)?",
         3: "Who are the major Cloud Providers (AWS, Azure, GCP)?",
         4: "What are the benefits of using Cloud Computing?",
@@ -90,7 +90,7 @@ with tab3:
             st.markdown(message["content"])
 
     # Get user input
-    if question := st.chat_input("Ask your question here:"):
+    if question := st.chat_input("Answer the question here to the best of your knowledge:"):
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": question})
         # Display user message in chat message container
@@ -101,7 +101,8 @@ with tab3:
         model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key)
 
         # Construct the prompt with the curriculum step and the base prompt
-        prompt = f"""You are a helpful AI assistant helping train people on Cloud development and deployment.
+        prompt = f"""You are a helpful AI assistant helping train people on Cloud development and deployment. If the user gets stuck on something,
+        try to nod them in the right direction.
 
         Curriculum Step {st.session_state.current_step}: {curriculum[st.session_state.current_step]}
 
