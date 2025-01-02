@@ -150,7 +150,8 @@ What emerging trends and technologies will shape its evolution?""",
         st.session_state.current_step = 1
 
     # Display current curriculum step
-    st.write(f"**Curriculum Step {st.session_state.current_step}:** {curriculum[st.session_state.current_step]}")
+    st.markdown(f"**Curriculum Step {st.session_state.current_step}:** {curriculum[st.session_state.current_step]['question']}", unsafe_allow_html=True)
+
 
     # Initialize chat history
     if "messages" not in st.session_state:
