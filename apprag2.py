@@ -150,15 +150,15 @@ with tab3:
         ]
     }
 }
-        if "current_step" not in st.session_state:
+    if "current_step" not in st.session_state:
         st.session_state.current_step = 1
 
     # Display current curriculum step
-    st.write(f"**Curriculum Step {st.session_state.current_step}:**", unsafe_allow_html=True)
+    st.write(f"**Curriculum Step {st.session_state.current_step}:**", unsafe_allow_html=True) 
     st.markdown(curriculum[st.session_state.current_step]["question"], unsafe_allow_html=True)
 
     # Display hints (using st.expander for better organization)
-    with st.expander("Hints"):
+    with st.expander("Hints"): 
         for hint in curriculum[st.session_state.current_step]["hints"]:
             st.markdown(hint, unsafe_allow_html=True)
 
@@ -173,11 +173,7 @@ with tab3:
 
     # Get user input
     if question := st.chat_input("Answer the question here to the best of your knowledge:"):
-        # Add user message to chat history
-        st.session_state.messages.append({"role": "user", "content": question})
-        # Display user message in chat message container
-        with st.chat_message("user"):
-            st.markdown(question)
+        # ... (add user message to chat history and display it)
 
         # Load the LLM
         model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key)
@@ -194,7 +190,7 @@ with tab3:
         Provide feedback to the user, including whether the answer is correct or needs improvement.
         If the answer needs improvement, provide specific guidance on what to improve. 
 
-        Evaluation and Feedback:"""
+        Evaluation and Feedback:""" 
 
         # Get the response
         response = model.predict(prompt)
@@ -207,24 +203,15 @@ with tab3:
 
         # Check if the LLM deems the answer sufficient
         # (This is a simplified check, you might need more sophisticated evaluation logic)
-        if "correct" in response.lower():
-            st.success("Correct! Moving on to the next question.")
-
-            # Increment the current step *before* displaying the next question
-            st.session_state.current_step += 1
-
-            # Check if there are more questions
-            if st.session_state.current_step <= len(curriculum):
-                st.write(f"**Curriculum Step {st.session_state.current_step}:**", unsafe_allow_html=True)
-                st.markdown(curriculum[st.session_state.current_step]["question"], unsafe_allow_html=True)
-                # Re-display hints for the new question
-                with st.expander("Hints"):
-                    for hint in curriculum[st.session_state.current_step]["hints"]:
-                        st.markdown(hint, unsafe_allow_html=True)
+        if "correct" in response.lower(): 
+            st.success("Correct! Moving on to the next question.")  # <-- Clear success message
+            if st.session_state.current_step < len(curriculum):
+                st.session_state.current_step += 1
             else:
                 st.write("Congratulations! You have completed the curriculum.")
         else:
-            st.error("Incorrect. Please try again.")
+            st.error("Incorrect. Please try again.")  # <-- Clear error message
+
 with tab4:
     st.markdown("""
     <style>
