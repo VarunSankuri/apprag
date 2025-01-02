@@ -67,12 +67,63 @@ with tab3:
 
     # Simple Curriculum
     curriculum = {
-        1: "What is your understanding of Cloud Computing?",
-        2: "What are the different types of Cloud Services (IaaS, PaaS, SaaS)?",
-        3: "Who are the major Cloud Providers (AWS, Azure, GCP)?",
-        4: "What are the benefits of using Cloud Computing?",
-        5: "Can you explain some common Cloud Computing use cases?"
+    1: {
+        "question": "What is Cloud Computing in your own words? How does it differ from traditional on-premises infrastructure?",
+        "hints": [
+            "Think about where the hardware and software are located.",
+            "Consider the concepts of on-demand access and scalability.",
+            "How do you pay for cloud services versus owning your own hardware?"
+        ]
+    },
+    2: {
+        "question": "Explain the three main types of Cloud Services: IaaS, PaaS, and SaaS. Provide real-world examples of each.",
+        "hints": [
+            "IaaS: What aspects of the infrastructure do you manage?",
+            "PaaS: What tools and resources are provided for developers?",
+            "SaaS: What kind of applications are typically delivered as SaaS?"
+        ]
+    },
+    3: {
+        "question": "Compare and contrast the three major Cloud Providers: AWS, Azure, and GCP. What are their strengths and weaknesses?",
+        "hints": [
+            "Consider factors like market share, global reach, and pricing models.",
+            "What specific services are each provider known for?",
+            "Are there any industry-specific offerings or certifications?"
+        ]
+    },
+    4: {
+        "question": "Imagine you're a consultant advising a company on migrating to the cloud. What benefits would you highlight to convince them?",
+        "hints": [
+            "Think about cost savings, scalability, and increased efficiency.",
+            "How does cloud computing improve security and disaster recovery?",
+            "What about innovation and access to new technologies?"
+        ]
+    },
+    5: {
+        "question": "Explore some common Cloud Computing use cases across different industries. How is the cloud transforming businesses?",
+        "hints": [
+            "Consider examples in healthcare, finance, e-commerce, and media.",
+            "How is the cloud used for data storage, analytics, and AI?",
+            "What about mobile app development, IoT, and gaming?"
+        ]
+    },
+    6: {
+        "question": "What are some of the challenges and risks associated with Cloud Computing? How can these be mitigated?",
+        "hints": [
+            "Think about security breaches, vendor lock-in, and compliance issues.",
+            "What about data privacy, outages, and unexpected costs?"
+            "How can companies ensure business continuity in the cloud?"
+        ]
+    },
+    7: {
+        "question": "Discuss the future of Cloud Computing. What emerging trends and technologies will shape its evolution?",
+        "hints": [
+            "Consider serverless computing, edge computing, and cloud-native development.",
+            "What about the role of AI, machine learning, and quantum computing in the cloud?",
+            "How will cloud computing impact sustainability and environmental concerns?"
+        ]
     }
+}
 
     if "current_step" not in st.session_state:
         st.session_state.current_step = 1
