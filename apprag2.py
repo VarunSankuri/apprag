@@ -10,15 +10,12 @@ import os
 import io
 from langchain_community.vectorstores import Chroma
 import pysqlite3  # Add this import
-import sys      # Add this import
+import sys       # Add this import
 
 # Swap sqlite3 with pysqlite3-binary
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 
 import chromadb
-from langchain.agents import load_tools
-from langchain.agents import initialize_agent
-from langchain.agents import AgentType
 
 chromadb.api.client.SharedSystemClient.clear_system_cache()
 
@@ -26,14 +23,14 @@ st.title("Cloud Current")
 st.markdown("""
 <style>
 .big-font {
-    font-size:20px !important;
+  font-size:20px !important;
 }
 </style>
 """, unsafe_allow_html=True)
 st.markdown('<p class="big-font">Developed by Varun Sankuri</p>', unsafe_allow_html=True)
 st.caption("Frustrated with ChatGPT and Google Gemini giving you outdated cloud info? Big box models can't keep up with the Cloud's rapid pace."
-            " CloudCurrent is updated much more frequently and also lets you upload your OWN PDFs to get the most accurate, "
-            "'up-to-the-minute answers'. Try it now!")
+           " CloudCurrent is updated much more frequently and also lets you upload your OWN PDFs to get the most accurate, "
+           "'up-to-the-minute answers'. Try it now!")
 st.caption("Example questions: Compare S3 storage classes and their use cases, or upload a file and ask the bot to Summarize the file")
 st.caption("For questions contact cloudcurrentapp@gmail.com")
 
@@ -49,69 +46,33 @@ if google_api_key is None:
     st.warning("API key not found. Please set the google_api_key environment variable.")
     st.stop()
 
-tab1, tab2, tab3, tab4 = st.tabs(
-    ["Chat Bot", "Upload PDF Files", "Learning Space for Students", "Decision Support for Organizations"]
+tab1, tab2,tab3,tab4 = st.tabs(
+    [ "Chat Bot","Upload PDF Files","Learning Space for Students","Decision Support for Organizations"]
 )
-
 with tab3:
     st.markdown("""
-    <style>
-    .big-font {
-        font-size:20px !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-    # st.markdown('<p class="big-font">This space is under construction</p>', unsafe_allow_html=True)
-    st.caption(
-            "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one."
-            "Build your skills and knowledge in a risk-free environment.")
-
-    # Initialize chat history
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-
-    # Display chat messages from history
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
-    # Get user input
-    if question := st.chat_input("What do you want to learn about Cloud today?"):
-        # Add user message to chat history
-        st.session_state.messages.append({"role": "user", "content": question})
-        # Display user message in chat message container
-        with st.chat_message("user"):
-            st.markdown(question)
-
-        # Load the model
-        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key)
-
-        # Initialize the agent with tools
-        tools = load_tools(["python_repl", "google_search"], llm=model)
-        agent = initialize_agent(tools, model, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
-
-        # Get the response
-        response = agent.run(question)
-
-        # Add assistant response to chat history
-        st.session_state.messages.append({"role": "assistant", "content": response})
-        # Display assistant response in chat message container
-        with st.chat_message("assistant"):
-            st.write(response)
-
-with tab4:
-    st.markdown("""
-    <style>
-    .big-font {
-        font-size:20px !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
+<style>
+.big-font {
+  font-size:20px !important;
+}
+</style>
+""", unsafe_allow_html=True)
     st.markdown('<p class="big-font">This space is under construction</p>', unsafe_allow_html=True)
     st.caption(
-            "Overwhelmed by complex business decisions? Cloud Current simplifies cost analysis, architecture design, and more."
-            "Make data-driven choices with confidence using our intuitive tools and visualizations.  Try it for free and see the difference Cloud Current can make in your business.")
-
+               "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one."
+      "Build your skills and knowledge in a risk-free environment.")
+with tab4:
+    st.markdown("""
+<style>
+.big-font {
+  font-size:20px !important;
+}
+</style>
+""", unsafe_allow_html=True)
+    st.markdown('<p class="big-font">This space is under construction</p>', unsafe_allow_html=True)
+    st.caption(
+               "Overwhelmed by complex business decisions? Cloud Current simplifies cost analysis, architecture design, and more."
+      "Make data-driven choices with confidence using our intuitive tools and visualizations.  Try it for free and see the difference Cloud Current can make in your business.")
 with tab2:
     st.caption("Although not necessary, you can upload your PDFs here to get more accurate answers/code")
     # File Upload with multiple file selection
