@@ -203,20 +203,39 @@ with tab3:
 
         # Check if the LLM deems the answer sufficient
         # (This is a simplified check, you might need more sophisticated evaluation logic)
-        if "correct" in response.lower(): 
-            st.success("Correct! Moving on to the next question.") 
+        # Check if the LLM deems the answer sufficient
+        if "correct" in response.lower():
+            st.success("Correct! Moving on to the next question.")
 
-            # Increment the current step *before* displaying the next question 
-            st.session_state.current_step += 1  # <-- Moved this line up
+            # Increment the current step *before* displaying the next question
+            st.session_state.current_step += 1
 
             # Check if there are more questions
-            if st.session_state.current_step <= len(curriculum):  
+            if st.session_state.current_step <= len(curriculum):
                 st.write(f"**Curriculum Step {st.session_state.current_step}:**", unsafe_allow_html=True)
-                st.markdown(curriculum[st.session_state.current_step]["question"], unsafe_allow_html=True) 
+                st.markdown(curriculum[st.session_state.current_step]["question"], unsafe_allow_html=True)
+                # Re-display hints for the new question
+                with st.expander("Hints"):
+                    for hint in curriculum[st.session_state.current_step]["hints"]:
+                        st.markdown(hint, unsafe_allow_html=True)
+
+                # Add a delay to allow the UI to update before scrolling
+                # time.sleep(0.1)  # You might need to adjust the delay
+
+                # Scroll to the bottom of the page
+                st.markdown("<script>window.scrollTo(0, document.body.scrollHeight);</script>", unsafe_allow_html=True)  # <-- Added this line
+
             else:
                 st.write("Congratulations! You have completed the curriculum.")
         else:
-            st.error("Incorrect. Please try again.") 
+            st.error("Incorrect. Please try again.")
+
+            # Add a delay to allow the UI to update before scrolling
+            # time.sleep(0.1)  # You might need to adjust the delay
+
+            # Scroll to the bottom of the page
+            st.markdown("<script>window.scrollTo(0, document.body.scrollHeight);</script>", unsafe_allow_html=True)  # <-- Added this line
+ 
 
 with tab4:
     st.markdown("""
