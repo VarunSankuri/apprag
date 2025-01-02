@@ -11,11 +11,15 @@ import io
 from langchain_community.vectorstores import Chroma
 import pysqlite3  # Add this import
 import sys       # Add this import
+from langchain.agents import load_tools
+from langchain.agents import initialize_agent
+from langchain.agents import AgentType
 
 # Swap sqlite3 with pysqlite3-binary
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 
 import chromadb
+
 
 chromadb.api.client.SharedSystemClient.clear_system_cache()
 
@@ -61,6 +65,63 @@ with tab3:
     st.caption(
                "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one."
       "Build your skills and knowledge in a risk-free environment.")
+  
+  # Simple Curriculum (assuming zero cloud development experience)
+    curriculum = {
+        1: "What is Cloud Computing?",
+        2: "What are the different types of Cloud Services (IaaS, PaaS, SaaS)?",
+        3: "Who are the major Cloud Providers (AWS, Azure, GCP)?",
+        4: "What are the benefits of using Cloud Computing?",
+        5: "Can you explain some common Cloud Computing use cases?"
+    }
+
+    if "current_step" not in st.session_state:
+        st.session_state.current_step = 1
+
+    # Display current curriculum step
+    st.write(f"**Curriculum Step {st.session_state.current_step}:** {curriculum[st.session_state.current_step]}")
+
+    # Initialize chat history
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
+    # Display chat messages from history
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+
+    # Get user input
+    if question := st.chat_input("Ask your question here:"):
+        # Add user message to chat history
+        st.session_state.messages.append({"role": "user", "content": question})
+        # Display user message in chat message container
+        with st.chat_message("user"):
+            st.markdown(question)
+
+        # Load the model
+        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key)
+
+        # Initialize the agent with tools
+        tools = load_tools(["python_repl", "google_search"], llm=model)
+        agent = initialize_agent(tools, model, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
+
+        # Get the response
+        response = agent.run(question)
+
+        # Add assistant response to chat history
+        st.session_state.messages.append({"role": "assistant", "content": response})
+        # Display assistant response in chat message container
+        with st.chat_message("assistant"):
+            st.write(response)
+
+        # Move to the next step in the curriculum
+        if st.session_state.current_step < len(curriculum):
+            st.session_state.current_step += 1
+        else:
+            st.write("Congratulations! You have completed the curriculum.")
+    # --- CHANGES END HERE ---
+
+
 with tab4:
     st.markdown("""
 <style>
