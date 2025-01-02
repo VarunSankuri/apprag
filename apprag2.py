@@ -68,81 +68,85 @@ with tab3:
     # Simple Curriculum
     curriculum = {
     1: {
-        "question": """**What is Cloud Computing in your own words?** 
+        "question": """<h3>What is Cloud Computing in your own words?</h3> 
 
-How does it differ from traditional on-premises infrastructure?""",
+<p>How does it differ from traditional on-premises infrastructure?</p>""",
         "hints": [
-            "Think about where the hardware and software are located.",
-            "Consider the concepts of on-demand access and scalability.",
-            "How do you pay for cloud services versus owning your own hardware?"
+            "<p>Think about where the hardware and software are located.</p>",
+            "<p>Consider the concepts of on-demand access and scalability.</p>",
+            "<p>How do you pay for cloud services versus owning your own hardware?</p>"
         ]
     },
     2: {
-        "question": """**Explain the three main types of Cloud Services:**
+        "question": """<h3>Explain the three main types of Cloud Services:</h3>
 
-* **IaaS (Infrastructure as a Service)**
-* **PaaS (Platform as a Service)** 
-* **SaaS (Software as a Service)** 
+<ul>
+  <li><b>IaaS (Infrastructure as a Service)</b></li>
+  <li><b>PaaS (Platform as a Service)</b></li> 
+  <li><b>SaaS (Software as a Service)</b></li> 
+</ul>
 
-Provide real-world examples of each.""",
+<p>Provide real-world examples of each.</p>""",
         "hints": [
-            "**IaaS:** What aspects of the infrastructure do you manage?",
-            "**PaaS:** What tools and resources are provided for developers?",
-            "**SaaS:** What kind of applications are typically delivered as SaaS?"
+            "<p><b>IaaS:</b> What aspects of the infrastructure do you manage?</p>",
+            "<p><b>PaaS:</b> What tools and resources are provided for developers?</p>",
+            "<p><b>SaaS:</b> What kind of applications are typically delivered as SaaS?</p>"
         ]
     },
     3: {
-        "question": """**Compare and contrast the three major Cloud Providers:**
+        "question": """<h3>Compare and contrast the three major Cloud Providers:</h3>
 
-* **AWS (Amazon Web Services)**
-* **Azure (Microsoft Azure)**
-* **GCP (Google Cloud Platform)**
+<ul>
+  <li><b>AWS (Amazon Web Services)</b></li>
+  <li><b>Azure (Microsoft Azure)</b></li>
+  <li><b>GCP (Google Cloud Platform)</b></li>
+</ul>
 
-What are their strengths and weaknesses?""",
+<p>What are their strengths and weaknesses?</p>""",
         "hints": [
-            "Consider factors like market share, global reach, and pricing models.",
-            "What specific services are each provider known for?",
-            "Are there any industry-specific offerings or certifications?"
+            "<p>Consider factors like market share, global reach, and pricing models.</p>",
+            "<p>What specific services are each provider known for?</p>",
+            "<p>Are there any industry-specific offerings or certifications?</p>"
         ]
     },
     4: {
-        "question": """**Imagine you're a consultant advising a company on migrating to the cloud.** 
+        "question": """<h3>Imagine you're a consultant advising a company on migrating to the cloud.</h3> 
 
-What benefits would you highlight to convince them?""",
+<p>What benefits would you highlight to convince them?</p>""",
         "hints": [
-            "Think about cost savings, scalability, and increased efficiency.",
-            "How does cloud computing improve security and disaster recovery?",
-            "What about innovation and access to new technologies?"
+            "<p>Think about cost savings, scalability, and increased efficiency.</p>",
+            "<p>How does cloud computing improve security and disaster recovery?</p>",
+            "<p>What about innovation and access to new technologies?</p>"
         ]
     },
     5: {
-        "question": """**Explore some common Cloud Computing use cases across different industries.** 
+        "question": """<h3>Explore some common Cloud Computing use cases across different industries.</h3> 
 
-How is the cloud transforming businesses?""",
+<p>How is the cloud transforming businesses?</p>""",
         "hints": [
-            "Consider examples in healthcare, finance, e-commerce, and media.",
-            "How is the cloud used for data storage, analytics, and AI?",
-            "What about mobile app development, IoT, and gaming?"
+            "<p>Consider examples in healthcare, finance, e-commerce, and media.</p>",
+            "<p>How is the cloud used for data storage, analytics, and AI?</p>",
+            "<p>What about mobile app development, IoT, and gaming?</p>"
         ]
     },
     6: {
-        "question": """**What are some of the challenges and risks associated with Cloud Computing?** 
+        "question": """<h3>What are some of the challenges and risks associated with Cloud Computing?</h3> 
 
-How can these be mitigated?""",
+<p>How can these be mitigated?</p>""",
         "hints": [
-            "Think about security breaches, vendor lock-in, and compliance issues.",
-            "What about data privacy, outages, and unexpected costs?",
-            "How can companies ensure business continuity in the cloud?"
+            "<p>Think about security breaches, vendor lock-in, and compliance issues.</p>",
+            "<p>What about data privacy, outages, and unexpected costs?</p>",
+            "<p>How can companies ensure business continuity in the cloud?</p>"
         ]
     },
     7: {
-        "question": """**Discuss the future of Cloud Computing.** 
+        "question": """<h3>Discuss the future of Cloud Computing.</h3> 
 
-What emerging trends and technologies will shape its evolution?""",
+<p>What emerging trends and technologies will shape its evolution?</p>""",
         "hints": [
-            "Consider serverless computing, edge computing, and cloud-native development.",
-            "What about the role of AI, machine learning, and quantum computing in the cloud?",
-            "How will cloud computing impact sustainability and environmental concerns?"
+            "<p>Consider serverless computing, edge computing, and cloud-native development.</p>",
+            "<p>What about the role of AI, machine learning, and quantum computing in the cloud?</p>",
+            "<p>How will cloud computing impact sustainability and environmental concerns?</p>"
         ]
     }
 }
@@ -150,7 +154,8 @@ What emerging trends and technologies will shape its evolution?""",
         st.session_state.current_step = 1
 
     # Display current curriculum step
-    st.markdown(f"**Curriculum Step {st.session_state.current_step}:** {curriculum[st.session_state.current_step]['question']}", unsafe_allow_html=True)
+    st.write(f"**Curriculum Step {st.session_state.current_step}:**", unsafe_allow_html=True) 
+    st.markdown(curriculum[st.session_state.current_step]["question"], unsafe_allow_html=True)
 
 
     # Initialize chat history
