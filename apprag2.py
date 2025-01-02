@@ -162,7 +162,6 @@ with tab3:
         for hint in curriculum[st.session_state.current_step]["hints"]:
             st.markdown(hint, unsafe_allow_html=True)
 
-
     # Initialize chat history
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -174,11 +173,7 @@ with tab3:
 
     # Get user input
     if question := st.chat_input("Answer the question here to the best of your knowledge:"):
-        # Add user message to chat history
-        st.session_state.messages.append({"role": "user", "content": question})
-        # Display user message in chat message container
-        with st.chat_message("user"):
-            st.markdown(question)
+        # ... (add user message to chat history and display it)
 
         # Load the LLM
         model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key)
@@ -186,7 +181,7 @@ with tab3:
         # Construct the prompt with the curriculum step, user question, and evaluation instructions
         prompt = f"""You are a helpful AI assistant helping train people on Cloud development and deployment. 
 
-        Curriculum Step {st.session_state.current_step}: {curriculum[st.session_state.current_step]}
+        Curriculum Step {st.session_state.current_step}: {curriculum[st.session_state.current_step]["question"]}
 
         User Answer: {question}
 
@@ -207,14 +202,15 @@ with tab3:
             st.write(response)
 
         # Check if the LLM deems the answer sufficient
-        # **(This is a simplified check, you might need more sophisticated evaluation logic)**
+        # (This is a simplified check, you might need more sophisticated evaluation logic)
         if "correct" in response.lower(): 
-            # Move to the next step in the curriculum
+            st.success("Correct! Moving on to the next question.")  # <-- Clear success message
             if st.session_state.current_step < len(curriculum):
                 st.session_state.current_step += 1
             else:
                 st.write("Congratulations! You have completed the curriculum.")
-        # else:  # (Optional) You can add a message here like "Try again!" if the answer is not correct
+        else:
+            st.error("Incorrect. Please try again.")  # <-- Clear error message
 
 with tab4:
     st.markdown("""
