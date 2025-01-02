@@ -13,6 +13,7 @@ import pysqlite3  # Add this import
 import sys       # Add this import
 from langchain.agents import AgentType, create_json_agent, initialize_agent, load_tools
 from langchain_community.utilities import GoogleSearchAPIWrapper
+from langchain_core.tools import Tool
 
 # Swap sqlite3 with pysqlite3-binary
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
@@ -65,8 +66,7 @@ with tab3:
                "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one."
       "Build your skills and knowledge in a risk-free environment.")
 
-  from langchain_community.utilities import GoogleSearchAPIWrapper
-  from langchain_core.tools import Tool
+  
 
   search = GoogleSearchAPIWrapper()
 
