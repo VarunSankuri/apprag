@@ -11,9 +11,8 @@ import io
 from langchain_community.vectorstores import Chroma
 import pysqlite3  # Add this import
 import sys       # Add this import
-from langchain.agents import load_tools
-from langchain.agents import initialize_agent
-from langchain.agents import AgentType
+from langchain.agents import AgentType, create_json_agent, initialize_agent, load_tools
+from langchain_community.utilities import GoogleSearchAPIWrapper
 
 # Swap sqlite3 with pysqlite3-binary
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
@@ -99,7 +98,7 @@ with tab3:
             st.markdown(question)
 
         # Load the model
-        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key)
+        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=1, api_key=google_api_key)
 
         # Initialize the agent with tools
         tools = load_tools(["python_repl", "google_search"], llm=model)
