@@ -67,17 +67,8 @@ with tab3:
 
     # Simple Curriculum
     curriculum = {
+    
     1: {
-        "question": """<h3>What is Cloud Computing in your own words?</h3> 
-
-<p>How does it differ from traditional on-premises infrastructure?</p>""",
-        "hints": [
-            "<p>Think about where the hardware and software are located.</p>",
-            "<p>Consider the concepts of on-demand access and scalability.</p>",
-            "<p>How do you pay for cloud services versus owning your own hardware?</p>"
-        ]
-    },
-    2: {
         "question": """<h3>Explain the three main types of Cloud Services:</h3>
 
 <ul>
@@ -91,6 +82,16 @@ with tab3:
             "<p><b>IaaS:</b> What aspects of the infrastructure do you manage?</p>",
             "<p><b>PaaS:</b> What tools and resources are provided for developers?</p>",
             "<p><b>SaaS:</b> What kind of applications are typically delivered as SaaS?</p>"
+        ]
+    },
+        2: {
+        "question": """<h3>What is Cloud Computing in your own words?</h3> 
+
+<p>How does it differ from traditional on-premises infrastructure?</p>""",
+        "hints": [
+            "<p>Think about where the hardware and software are located.</p>",
+            "<p>Consider the concepts of on-demand access and scalability.</p>",
+            "<p>How do you pay for cloud services versus owning your own hardware?</p>"
         ]
     },
     3: {
