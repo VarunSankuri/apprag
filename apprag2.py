@@ -60,16 +60,11 @@ with tab3:
     }
     </style>
     """, unsafe_allow_html=True)
-    # st.markdown('<p class="big-font">This space is under construction</p>', unsafe_allow_html=True)
     st.caption(
-            "Dive into cloud development with our agent-powered learning platform! We guide you through a structured curriculum, exploring multiple cloud providers without the pressure of picking one."
+            "Dive into cloud development with our learning platform! We guide you through a structured curriculum, exploring multiple cloud providers."
             "Build your skills and knowledge in a risk-free environment.")
 
-    # Initialize Google Search tool
-    search = GoogleSearchAPIWrapper(google_api_key=google_api_key)
-    tools = load_tools(["google_search"], llm=model) 
-
-    # Simple Curriculum (assuming zero cloud development experience)
+    # Simple Curriculum
     curriculum = {
         1: "What is Cloud Computing?",
         2: "What are the different types of Cloud Services (IaaS, PaaS, SaaS)?",
@@ -101,14 +96,11 @@ with tab3:
         with st.chat_message("user"):
             st.markdown(question)
 
-        # Load the model
+        # Load the LLM
         model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key)
 
-        # Initialize the agent with tools 
-        agent = initialize_agent(tools, model, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
-
         # Get the response
-        response = agent.run(question)
+        response = model.predict(question)  # Use the LLM directly
 
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
@@ -121,6 +113,7 @@ with tab3:
             st.session_state.current_step += 1
         else:
             st.write("Congratulations! You have completed the curriculum.")
+
 
 
 with tab4:
