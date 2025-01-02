@@ -52,6 +52,7 @@ tab1, tab2, tab3, tab4 = st.tabs(
     ["Chat Bot", "Upload PDF Files", "Learning Space for Students", "Decision Support for Organizations"]
 )
 
+
 with tab3:
     st.markdown("""
     <style>
@@ -89,7 +90,7 @@ with tab3:
             st.markdown(message["content"])
 
     # Get user input
-    if question := st.chat_input("Answer the question here:"):
+    if question := st.chat_input("Ask your question here:"):
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": question})
         # Display user message in chat message container
@@ -99,8 +100,17 @@ with tab3:
         # Load the LLM
         model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key)
 
+        # Construct the prompt with the curriculum step and the base prompt
+        prompt = f"""You are a helpful AI assistant helping train people on Cloud development and deployment.
+
+        Curriculum Step {st.session_state.current_step}: {curriculum[st.session_state.current_step]}
+
+        User Question: {question}
+
+        Answer:"""
+
         # Get the response
-        response = model.predict(question)  # Use the LLM directly
+        response = model.predict(prompt)
 
         # Add assistant response to chat history
         st.session_state.messages.append({"role": "assistant", "content": response})
@@ -113,8 +123,6 @@ with tab3:
             st.session_state.current_step += 1
         else:
             st.write("Congratulations! You have completed the curriculum.")
-
-
 
 with tab4:
     st.markdown("""
