@@ -83,8 +83,8 @@ curriculum = {
         5: "Can you explain some common Cloud Computing use cases?"
     }
 
-    if "current_step" not in st.session_state:
-        st.session_state.current_step = 1
+if "current_step" not in st.session_state:
+    st.session_state.current_step = 1
 
     # Display current curriculum step
     st.write(f"**Curriculum Step {st.session_state.current_step}:** {curriculum[st.session_state.current_step]}")
