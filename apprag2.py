@@ -16,6 +16,9 @@ import sys       # Add this import
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 
 import chromadb
+from langchain.agents import load_tools
+from langchain.agents import initialize_agent
+from langchain.agents import AgentType
 
 chromadb.api.client.SharedSystemClient.clear_system_cache()
 
