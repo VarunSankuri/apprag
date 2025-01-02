@@ -163,12 +163,12 @@ with tab3:
         for hint in curriculum[st.session_state.current_step]["hints"]:
             st.markdown(hint, unsafe_allow_html=True)
 
-    # Initialize chat history
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+       # Initialize chat history (specific to Tab 3)
+    if "messages_tab3" not in st.session_state:  # <-- Changed variable name
+        st.session_state.messages_tab3 = []  # <-- Changed variable name
 
-    # Display chat messages from history
-    for message in st.session_state.messages:
+    # Display chat messages from history (specific to Tab 3)
+    for message in st.session_state.messages_tab3:  # <-- Changed variable name
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
@@ -197,7 +197,7 @@ with tab3:
         response = model.predict(prompt)
 
         # Add assistant response to chat history
-        st.session_state.messages.append({"role": "assistant", "content": response})
+        st.session_state.messages_tab3.append({"role": "user", "content": question})  # <-- Changed variable name
         # Display assistant response in chat message container
         with st.chat_message("assistant"):
             st.write(response)
