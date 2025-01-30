@@ -19,6 +19,35 @@ import plotly.express as px
 from graphviz import Source
 import graphviz
 
+def install_graphviz_and_libs():
+    try:
+        # Check if Graphviz is already installed
+        subprocess.run(["dot", "-V"], check=True, capture_output=True, text=True)
+        st.write("Graphviz is already installed.")
+    except FileNotFoundError:
+        st.write("Graphviz not found. Installing...")
+        try:
+            # Install Graphviz using apt-get
+            subprocess.run(["apt-get", "update"], check=True)
+            subprocess.run(["apt-get", "install", "-y", "graphviz"], check=True)
+            st.write("Graphviz installed successfully.")
+
+            # Install required Python libraries
+            subprocess.run(["pip", "install", "graphviz", "pydot"], check=True)
+            st.write("Required Python libraries installed.")
+
+        except subprocess.CalledProcessError as e:
+            st.error(f"Error during installation: {e}")
+            st.stop()
+    except subprocess.CalledProcessError as e:
+        st.error(f"Error checking Graphviz installation: {e}")
+        st.stop()
+
+# Install Graphviz and required libraries at the start of the app
+install_graphviz_and_libs()
+
+import graphviz
+
 # Function to validate email format
 def is_valid_email(email):
     pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
