@@ -236,7 +236,7 @@ with tab4:
             st.error("Incorrect. Please try again.")
 
 
-with tab3:
+with tab2:
     st.markdown("""
     <style>
     .big-font {
@@ -270,8 +270,8 @@ with tab3:
     st.subheader("Cost Analysis")
 
     # --- Cost Analysis Input ---
-    st.markdown("**Estimate your monthly cloud costs:**")
-    col1, col2, col3 = st.columns(3)
+    st.markdown("**Estimate your cloud costs:**")
+    col1, col2, col3, col4 = st.columns(4)
     with col1:
         compute_hours = st.number_input("Compute Hours/Month", min_value=0, value=100)
         storage_gb = st.number_input("Storage (GB)/Month", min_value=0, value=50)
@@ -281,42 +281,46 @@ with tab3:
     with col3:
         os = st.selectbox("Operating System", ["Linux", "Windows"])
         compute_service = st.selectbox("Compute Service", ["Basic Compute", "High-Performance Compute"])
+    with col4:
+        service_provider = st.selectbox("Service Provider", ["AWS", "Azure", "Google Cloud"])
 
     # --- Sample Cost Data (Replace with actual cloud pricing data) ---
     cost_data = {
-        "Region": ["US East", "US West", "Europe", "Asia"],
-        "Basic Compute": [0.10, 0.12, 0.15, 0.18],
-        "High-Performance Compute": [0.20, 0.22, 0.25, 0.28],
-        "Storage": [0.05, 0.06, 0.07, 0.08],
-        "Bandwidth": [0.09, 0.10, 0.12, 0.15],
-        "Linux": [0.0, 0.0, 0.0, 0.0],
-        "Windows": [0.02, 0.02, 0.02, 0.02],  # Example surcharge for Windows
+        "Service Provider": ["AWS", "Azure", "Google Cloud", "AWS", "Azure", "Google Cloud"],
+        "Region": ["US East", "US East", "US East", "US West", "US West", "US West"],
+        "Basic Compute": [0.10, 0.12, 0.09, 0.12, 0.13, 0.10],
+        "High-Performance Compute": [0.20, 0.22, 0.19, 0.22, 0.23, 0.20],
+        "Storage": [0.05, 0.06, 0.04, 0.06, 0.07, 0.05],
+        "Bandwidth": [0.09, 0.10, 0.08, 0.10, 0.11, 0.09],
+        "Linux": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        "Windows": [0.02, 0.025, 0.015, 0.02, 0.025, 0.015],
     }
+
     cost_df = pd.DataFrame(cost_data)
 
     # --- Cost Calculation ---
-    def calculate_cost(compute_hours, storage_gb, bandwidth_tb, region, os, compute_service):
+    def calculate_cost(compute_hours, storage_gb, bandwidth_tb, region, os, compute_service, service_provider):
         try:
-            compute_cost = (
-                compute_hours
-                * cost_df[cost_df["Region"] == region][compute_service].iloc[0]
-            )
-            storage_cost = storage_gb * cost_df[cost_df["Region"] == region]["Storage"].iloc[0]
-            bandwidth_cost = (
-                bandwidth_tb * cost_df[cost_df["Region"] == region]["Bandwidth"].iloc[0]
-            )
-            os_cost = compute_hours * cost_df[cost_df["Region"] == region][os].iloc[0]
+            filtered_df = cost_df[
+                (cost_df["Region"] == region) & (cost_df["Service Provider"] == service_provider)
+            ]
+            compute_cost = compute_hours * filtered_df[compute_service].iloc[0]
+            storage_cost = storage_gb * filtered_df["Storage"].iloc[0]
+            bandwidth_cost = bandwidth_tb * filtered_df["Bandwidth"].iloc[0]
+            os_cost = compute_hours * filtered_df[os].iloc[0]
             total_cost = compute_cost + storage_cost + bandwidth_cost + os_cost
             return total_cost
         except (KeyError, IndexError):
             st.error(
-                "Error calculating cost. Please check the selected region and service type."
+                "Error calculating cost. Please check the selected region, service type, and service provider."
             )
             return 0
 
     # --- Cost Visualization ---
     if st.button("Calculate Cost"):
-        total_cost = calculate_cost(compute_hours, storage_gb, bandwidth_tb, region, os, compute_service)
+        total_cost = calculate_cost(
+            compute_hours, storage_gb, bandwidth_tb, region, os, compute_service, service_provider
+        )
 
         st.markdown(f"**Estimated Monthly Cost:  $ {total_cost:.2f}**")
 
@@ -325,10 +329,21 @@ with tab3:
             "Category": ["Compute", "Storage", "Bandwidth", "OS"],
             "Cost": [
                 compute_hours
-                * cost_df[cost_df["Region"] == region][compute_service].iloc[0],
-                storage_gb * cost_df[cost_df["Region"] == region]["Storage"].iloc[0],
-                bandwidth_tb * cost_df[cost_df["Region"] == region]["Bandwidth"].iloc[0],
-                compute_hours * cost_df[cost_df["Region"] == region][os].iloc[0],
+                * cost_df[
+                    (cost_df["Region"] == region) & (cost_df["Service Provider"] == service_provider)
+                ][compute_service].iloc[0],
+                storage_gb
+                * cost_df[
+                    (cost_df["Region"] == region) & (cost_df["Service Provider"] == service_provider)
+                ]["Storage"].iloc[0],
+                bandwidth_tb
+                * cost_df[
+                    (cost_df["Region"] == region) & (cost_df["Service Provider"] == service_provider)
+                ]["Bandwidth"].iloc[0],
+                compute_hours
+                * cost_df[
+                    (cost_df["Region"] == region) & (cost_df["Service Provider"] == service_provider)
+                ][os].iloc[0],
             ],
         }
         cost_breakdown_df = pd.DataFrame(cost_breakdown)
