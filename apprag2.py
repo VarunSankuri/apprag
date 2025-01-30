@@ -287,7 +287,7 @@ with tab3:
     # --- Sample Cost Data (Replace with actual cloud pricing data) ---
     cost_data = {
         "Service Provider": ["AWS", "Azure", "Google Cloud", "AWS", "Azure", "Google Cloud"],
-        "Region": ["US East", "US East", "US East", "US West", "US West", "US West"],
+        "Region": ["US East", "US West", "Europe", "Asia"],
         "Basic Compute": [0.10, 0.12, 0.09, 0.12, 0.13, 0.10],
         "High-Performance Compute": [0.20, 0.22, 0.19, 0.22, 0.23, 0.20],
         "Storage": [0.05, 0.06, 0.04, 0.06, 0.07, 0.05],
