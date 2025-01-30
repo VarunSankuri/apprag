@@ -521,7 +521,7 @@ with tab3:
     st.markdown("**Architecture Diagram:**")
     
     graph = Source(arch_patterns[selected_pattern]["diagram"])
-    st.graphviz_chart("diagram": """
+    st.graphviz_chart("""
                 graph TD;
                 A[Load Balancer] --> B(Web Server 1);
                 A --> C(Web Server 2);
