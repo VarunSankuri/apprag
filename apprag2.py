@@ -61,7 +61,7 @@ tab1, tab2, tab3, tab4 = st.tabs(
 )
 
 
-with tab3:
+with tab4:
     st.markdown("""
     <style>
     .big-font {
@@ -235,7 +235,7 @@ with tab3:
             st.error("Incorrect. Please try again.")
 
 
-with tab4:
+with tab3:
     st.markdown("""
     <style>
     .big-font {
