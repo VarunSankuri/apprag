@@ -521,7 +521,7 @@ with tab3:
     st.markdown("**Architecture Diagram:**")
     
     graph = Source(arch_patterns[selected_pattern]["diagram"])
-    st.graphviz_chart("""
+    st.graphviz_chart(
                 graph TD;
                 A[Load Balancer] --> B(Web Server 1);
                 A --> C(Web Server 2);
@@ -532,7 +532,7 @@ with tab3:
                 A -.-> G([CDN]);
                 B -.-> H([Caching Layer]);
                 C -.-> H;
-            """)
+            )
 
     st.markdown("**Key Considerations:**")
     st.markdown(arch_patterns[selected_pattern]["considerations"])
