@@ -270,7 +270,7 @@ with tab3:
     st.subheader("Cost Analysis")
 
     # --- Cost Analysis Input ---
-    st.markdown("**Estimate your cloud costs:**")
+    st.markdown("**Estimate your monthly cloud costs:**")
     col1, col2, col3 = st.columns(3)
     with col1:
         compute_hours = st.number_input("Compute Hours/Month", min_value=0, value=100)
