@@ -236,7 +236,7 @@ with tab4:
             st.error("Incorrect. Please try again.")
 
 
-with tab4:
+with tab3:
     st.markdown("""
     <style>
     .big-font {
