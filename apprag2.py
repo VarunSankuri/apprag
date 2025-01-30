@@ -286,14 +286,14 @@ with tab3:
 
     # --- Sample Cost Data (Replace with actual cloud pricing data) ---
     cost_data = {
-        "Service Provider": ["AWS", "Azure", "Google Cloud", "AWS", "Azure", "Google Cloud"],
-        "Region": ["US East", "US West", "Europe", "Asia", "US East", "US West"],
-        "Basic Compute": [0.10, 0.12, 0.09, 0.12, 0.13, 0.10],
-        "High-Performance Compute": [0.20, 0.22, 0.19, 0.22, 0.23, 0.20],
-        "Storage": [0.05, 0.06, 0.04, 0.06, 0.07, 0.05],
-        "Bandwidth": [0.09, 0.10, 0.08, 0.10, 0.11, 0.09],
-        "Linux": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        "Windows": [0.02, 0.025, 0.015, 0.02, 0.025, 0.015],
+    "Service Provider": ["AWS", "Azure", "Google Cloud", "AWS", "Azure", "Google Cloud", "AWS", "Azure", "Google Cloud", "AWS", "Azure", "Google Cloud"],
+    "Region": ["US East", "US East", "US East", "US West", "US West", "US West", "Europe", "Europe", "Europe", "Asia", "Asia", "Asia"],
+    "Basic Compute": [0.10, 0.12, 0.09, 0.12, 0.13, 0.10, 0.14, 0.15, 0.13, 0.16, 0.17, 0.15],
+    "High-Performance Compute": [0.20, 0.22, 0.19, 0.22, 0.23, 0.20, 0.24, 0.25, 0.23, 0.26, 0.27, 0.25],
+    "Storage": [0.05, 0.06, 0.04, 0.06, 0.07, 0.05, 0.07, 0.08, 0.06, 0.08, 0.09, 0.07],
+    "Bandwidth": [0.09, 0.10, 0.08, 0.10, 0.11, 0.09, 0.11, 0.12, 0.10, 0.12, 0.13, 0.11],
+    "Linux": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "Windows": [0.02, 0.025, 0.015, 0.02, 0.025, 0.015, 0.022, 0.027, 0.017, 0.025, 0.03, 0.02],
     }
 
     cost_df = pd.DataFrame(cost_data)
