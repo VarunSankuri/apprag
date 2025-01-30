@@ -14,7 +14,7 @@ import sys      # Add this import
 from langchain.agents import AgentType, initialize_agent, load_tools
 from langchain_community.utilities import GoogleSearchAPIWrapper
 import pandas as pd
-import plotly.express as px
+# import plotly.express as px
 import re
 
 # Function to validate email format
