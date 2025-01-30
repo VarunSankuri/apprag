@@ -236,7 +236,7 @@ with tab4:
             st.error("Incorrect. Please try again.")
 
 
-with tab3:
+with tab4:
     st.markdown("""
     <style>
     .big-font {
@@ -352,17 +352,33 @@ with tab3:
         "Web Application": {
             "description": "A simple three-tier web application architecture.",
             "components": ["Load Balancer", "Web Servers", "Database"],
-            "diagram": "graph TD; A[Load Balancer] --> B(Web Server 1); A --> C(Web Server 2); B --> D{Database}; C --> D;",
+            "diagram": """
+                graph TD;
+                A[Load Balancer] --> B(Web Server 1);
+                A --> C(Web Server 2);
+                B --> D{Database};
+                C --> D;
+            """,
         },
         "Microservices": {
             "description": "A microservices architecture with API Gateway and service discovery.",
             "components": ["API Gateway", "Service A", "Service B", "Service Registry"],
-            "diagram": "graph TD; A[API Gateway] --> B(Service A); A --> C(Service B); B --> D{Service Registry}; C --> D;",
+            "diagram": """
+                graph TD;
+                A[API Gateway] --> B(Service A);
+                A --> C(Service B);
+                B --> D{Service Registry};
+                C --> D;
+            """,
         },
         "Serverless": {
             "description": "A serverless architecture using API Gateway, Lambda functions, and DynamoDB.",
             "components": ["API Gateway", "Lambda Function", "DynamoDB"],
-            "diagram": "graph TD; A[API Gateway] --> B(Lambda Function); B --> C{DynamoDB};",
+            "diagram": """
+                graph TD;
+                A[API Gateway] --> B(Lambda Function);
+                B --> C{DynamoDB};
+            """,
         },
     }
 
@@ -373,14 +389,16 @@ with tab3:
     for component in arch_patterns[selected_pattern]["components"]:
         st.markdown(f"- {component}")
 
-    st.graphviz_chart(arch_patterns[selected_pattern]["diagram"])
+    # Render the Graphviz diagram using st.graphviz_chart
+    graph = Source(arch_patterns[selected_pattern]["diagram"])
+    st.graphviz_chart(graph)
 
     # --- Contact Form ---
     st.subheader("Contact Us for a Free Trial")
     st.markdown(
         "Interested in learning more about how Cloud Current can help your business? Fill out the form below, and we'll get in touch!"
     )
-    
+
     # Initialize session state for form submission if it doesn't exist
     if 'form_submitted' not in st.session_state:
         st.session_state.form_submitted = False
