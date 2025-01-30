@@ -272,16 +272,16 @@ with tab3:
     # --- Cost Analysis Input ---
     st.markdown("**Estimate your cloud costs:**")
     col1, col2, col3, col4 = st.columns(4)
-    with col1:
+    with col2:
         compute_hours = st.number_input("Compute Hours/Month", min_value=0, value=100)
         storage_gb = st.number_input("Storage (GB)/Month", min_value=0, value=50)
-    with col2:
+    with col3:
         bandwidth_tb = st.number_input("Bandwidth (TB)/Month", min_value=0.0, value=1.0)
         region = st.selectbox("Region", ["US East", "US West", "Europe", "Asia"])
-    with col3:
+    with col4:
         os = st.selectbox("Operating System", ["Linux", "Windows"])
         compute_service = st.selectbox("Compute Service", ["Basic Compute", "High-Performance Compute"])
-    with col4:
+    with col1:
         service_provider = st.selectbox("Service Provider", ["AWS", "Azure", "Google Cloud"])
 
     # --- Sample Cost Data (Replace with actual cloud pricing data) ---
