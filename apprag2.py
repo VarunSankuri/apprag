@@ -17,6 +17,7 @@ import pandas as pd
 import re
 import plotly.express as px
 from graphviz import Source
+import graphviz
 
 # Function to validate email format
 def is_valid_email(email):
@@ -517,10 +518,13 @@ with tab3:
     for component, description in arch_patterns[selected_pattern]["components"].items():
         st.markdown(f"- **{component}:** {description}")
 
-    # Render the Graphviz diagram using st.graphviz_chart
+     # Render the Graphviz diagram using st.graphviz_chart
     st.markdown("**Architecture Diagram:**")
-    
-    graph = Source(arch_patterns[selected_pattern]["diagram"])
+
+    # Create a Graphviz graph directly
+    graph = graphviz.Digraph()
+    graph.body.extend(arch_patterns[selected_pattern]["diagram"].splitlines())  # Add the diagram definition
+
     st.graphviz_chart(graph)
 
     st.markdown("**Key Considerations:**")
