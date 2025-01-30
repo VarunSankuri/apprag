@@ -241,12 +241,172 @@ with tab4:
     .big-font {
         font-size:20px !important;
     }
+    .stButton>button {
+        color: white;
+        background-color: #4CAF50; /* Green */
+        border: none;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+    .stButton>button:hover {
+        background-color: #3e8e41; /* Darker green */
+    }
     </style>
     """, unsafe_allow_html=True)
-    st.markdown('<p class="big-font">This space is under construction</p>', unsafe_allow_html=True)
+    st.markdown('<p class="big-font">Decision Support for Organizations</p>', unsafe_allow_html=True)
     st.caption(
-            "Overwhelmed by complex business decisions? Cloud Current simplifies cost analysis, architecture design, and more."
-            "Make data-driven choices with confidence using our intuitive tools and visualizations.  Try it for free and see the difference Cloud Current can make in your business.")
+        "Overwhelmed by complex business decisions? Cloud Current simplifies cost analysis, architecture design, and more. "
+        "Make data-driven choices with confidence using our intuitive tools and visualizations. "
+        "Try it for free and see the difference Cloud Current can make in your business."
+    )
+
+    st.subheader("Cost Analysis")
+
+    # --- Cost Analysis Input ---
+    st.markdown("**Estimate your cloud costs:**")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        compute_hours = st.number_input("Compute Hours/Month", min_value=0, value=100)
+        storage_gb = st.number_input("Storage (GB)/Month", min_value=0, value=50)
+    with col2:
+        bandwidth_tb = st.number_input("Bandwidth (TB)/Month", min_value=0.0, value=1.0)
+        region = st.selectbox("Region", ["US East", "US West", "Europe", "Asia"])
+    with col3:
+        os = st.selectbox("Operating System", ["Linux", "Windows"])
+        compute_service = st.selectbox("Compute Service", ["Basic Compute", "High-Performance Compute"])
+
+    # --- Sample Cost Data (Replace with actual cloud pricing data) ---
+    cost_data = {
+        "Region": ["US East", "US West", "Europe", "Asia"],
+        "Basic Compute": [0.10, 0.12, 0.15, 0.18],
+        "High-Performance Compute": [0.20, 0.22, 0.25, 0.28],
+        "Storage": [0.05, 0.06, 0.07, 0.08],
+        "Bandwidth": [0.09, 0.10, 0.12, 0.15],
+        "Linux": [0.0, 0.0, 0.0, 0.0],
+        "Windows": [0.02, 0.02, 0.02, 0.02],  # Example surcharge for Windows
+    }
+    cost_df = pd.DataFrame(cost_data)
+
+    # --- Cost Calculation ---
+    def calculate_cost(compute_hours, storage_gb, bandwidth_tb, region, os, compute_service):
+        try:
+            compute_cost = (
+                compute_hours
+                * cost_df[cost_df["Region"] == region][compute_service].iloc[0]
+            )
+            storage_cost = storage_gb * cost_df[cost_df["Region"] == region]["Storage"].iloc[0]
+            bandwidth_cost = (
+                bandwidth_tb * cost_df[cost_df["Region"] == region]["Bandwidth"].iloc[0]
+            )
+            os_cost = compute_hours * cost_df[cost_df["Region"] == region][os].iloc[0]
+            total_cost = compute_cost + storage_cost + bandwidth_cost + os_cost
+            return total_cost
+        except (KeyError, IndexError):
+            st.error(
+                "Error calculating cost. Please check the selected region and service type."
+            )
+            return 0
+
+    # --- Cost Visualization ---
+    if st.button("Calculate Cost"):
+        total_cost = calculate_cost(compute_hours, storage_gb, bandwidth_tb, region, os, compute_service)
+
+        st.markdown(f"**Estimated Monthly Cost:  $ {total_cost:.2f}**")
+
+        # Sample cost breakdown data for visualization
+        cost_breakdown = {
+            "Category": ["Compute", "Storage", "Bandwidth", "OS"],
+            "Cost": [
+                compute_hours
+                * cost_df[cost_df["Region"] == region][compute_service].iloc[0],
+                storage_gb * cost_df[cost_df["Region"] == region]["Storage"].iloc[0],
+                bandwidth_tb * cost_df[cost_df["Region"] == region]["Bandwidth"].iloc[0],
+                compute_hours * cost_df[cost_df["Region"] == region][os].iloc[0],
+            ],
+        }
+        cost_breakdown_df = pd.DataFrame(cost_breakdown)
+
+        fig = px.bar(
+            cost_breakdown_df,
+            x="Category",
+            y="Cost",
+            title="Cost Breakdown",
+            color="Category",
+        )
+        st.plotly_chart(fig)
+
+    st.subheader("Architecture Design")
+    st.markdown(
+        "**Explore common cloud architecture patterns:**"
+    )
+
+    # --- Architecture Examples (Expand with more patterns) ---
+    arch_patterns = {
+        "Web Application": {
+            "description": "A simple three-tier web application architecture.",
+            "components": ["Load Balancer", "Web Servers", "Database"],
+            "diagram": "graph TD; A[Load Balancer] --> B(Web Server 1); A --> C(Web Server 2); B --> D{Database}; C --> D;",
+        },
+        "Microservices": {
+            "description": "A microservices architecture with API Gateway and service discovery.",
+            "components": ["API Gateway", "Service A", "Service B", "Service Registry"],
+            "diagram": "graph TD; A[API Gateway] --> B(Service A); A --> C(Service B); B --> D{Service Registry}; C --> D;",
+        },
+        "Serverless": {
+            "description": "A serverless architecture using API Gateway, Lambda functions, and DynamoDB.",
+            "components": ["API Gateway", "Lambda Function", "DynamoDB"],
+            "diagram": "graph TD; A[API Gateway] --> B(Lambda Function); B --> C{DynamoDB};",
+        },
+    }
+
+    selected_pattern = st.selectbox("Select Architecture Pattern", list(arch_patterns.keys()))
+
+    st.markdown(arch_patterns[selected_pattern]["description"])
+    st.markdown("**Components:**")
+    for component in arch_patterns[selected_pattern]["components"]:
+        st.markdown(f"- {component}")
+
+    st.graphviz_chart(arch_patterns[selected_pattern]["diagram"])
+
+    # --- Contact Form ---
+    st.subheader("Contact Us for a Free Trial")
+    st.markdown(
+        "Interested in learning more about how Cloud Current can help your business? Fill out the form below, and we'll get in touch!"
+    )
+    
+    # Initialize session state for form submission if it doesn't exist
+    if 'form_submitted' not in st.session_state:
+        st.session_state.form_submitted = False
+
+    with st.form("contact_form"):
+        name = st.text_input("Your Name")
+        company = st.text_input("Company Name")
+        email = st.text_input("Email Address")
+        phone = st.text_input("Phone Number (Optional)")
+        message = st.text_area("Message (Optional)")
+
+        # Submit button for the form
+        submit_button = st.form_submit_button("Submit")
+
+        if submit_button:
+            if not name or not company or not email:
+                st.warning("Please fill in all required fields.")
+            elif not is_valid_email(email):
+                st.warning("Please enter a valid email address.")
+            else:
+                # Here you would typically send an email or store the form data
+                # For this example, we'll just display a success message
+                st.session_state.form_submitted = True
+
+    # Display a success message if the form was submitted
+    if st.session_state.form_submitted:
+        st.success("Thank you for your interest! We'll be in touch soon.")
 
 with tab2:
     st.caption("Although not necessary, you can upload your PDFs here to get more accurate answers/code")
