@@ -13,6 +13,14 @@ import pysqlite3  # Add this import
 import sys      # Add this import
 from langchain.agents import AgentType, initialize_agent, load_tools
 from langchain_community.utilities import GoogleSearchAPIWrapper
+import pandas as pd
+import plotly.express as px
+import re
+
+# Function to validate email format
+def is_valid_email(email):
+    pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    return re.match(pattern, email) is not None
 
 # Swap sqlite3 with pysqlite3-binary
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
