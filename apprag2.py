@@ -362,37 +362,150 @@ with tab3:
         "**Explore common cloud architecture patterns:**"
     )
 
-    # --- Architecture Examples (Expand with more patterns) ---
     arch_patterns = {
-        "Web Application": {
-            "description": "A simple three-tier web application architecture.",
-            "components": ["Load Balancer", "Web Servers", "Database"],
+        "Web Application (Three-Tier)": {
+            "description": """
+                A classic three-tier architecture commonly used for web applications. It separates the application into three logical layers: presentation (web servers), application logic (application servers), and data storage (database).
+                This pattern offers good scalability, maintainability, and fault isolation.
+            """,
+            "components": {
+                "Load Balancer": "Distributes incoming traffic across multiple web servers, ensuring high availability and responsiveness.",
+                "Web Servers (Presentation Tier)": "Handle user interface and interactions, typically serving static content and routing requests to application servers.",
+                "Application Servers (Application Tier)": "Process business logic, handle dynamic content generation, and interact with the database.",
+                "Database (Data Tier)": "Stores and manages the application's data. Can be relational (e.g., MySQL, PostgreSQL) or NoSQL (e.g., MongoDB, Cassandra).",
+                "Caching Layer (Optional)": "Improves performance by storing frequently accessed data in a fast cache (e.g., Redis, Memcached).",
+                "CDN (Optional)": "Content Delivery Network distributes static content closer to users, reducing latency.",
+            },
             "diagram": """
                 graph TD;
                 A[Load Balancer] --> B(Web Server 1);
                 A --> C(Web Server 2);
-                B --> D{Database};
-                C --> D;
+                B --> E(Application Server 1);
+                C --> F(Application Server 2);
+                E --> D{Database};
+                F --> D;
+                A -.-> G([CDN]);
+                B -.-> H([Caching Layer]);
+                C -.-> H;
+            """,
+            "considerations": """
+                - **Scalability:** Each tier can be scaled independently based on demand.
+                - **Security:** Implement security measures at each tier (e.g., firewalls, access controls).
+                - **Database Choice:** Select a database that meets your application's requirements for data consistency, availability, and scalability.
+                - **Caching Strategy:** Carefully design your caching strategy to balance performance gains with data consistency.
             """,
         },
         "Microservices": {
-            "description": "A microservices architecture with API Gateway and service discovery.",
-            "components": ["API Gateway", "Service A", "Service B", "Service Registry"],
+            "description": """
+                An architectural style that structures an application as a collection of loosely coupled, independently deployable services. Each service focuses on a specific business capability and communicates with other services through lightweight protocols (e.g., REST APIs, gRPC).
+                Microservices enable faster development cycles, improved scalability, and greater resilience.
+            """,
+            "components": {
+                "API Gateway": "Provides a single entry point for external clients to access the microservices. Handles routing, authentication, and rate limiting.",
+                "Service A, B, C, etc.": "Individual microservices responsible for specific business functions. Each service has its own database and can be developed and deployed independently.",
+                "Service Registry/Discovery": "Keeps track of available service instances and their locations, allowing services to discover and communicate with each other dynamically (e.g., Eureka, Consul).",
+                "Message Broker (Optional)": "Facilitates asynchronous communication between services using a message queue (e.g., Kafka, RabbitMQ).",
+                "Configuration Server (Optional)": "Centralized management of configuration settings for all services.",
+            },
             "diagram": """
                 graph TD;
                 A[API Gateway] --> B(Service A);
                 A --> C(Service B);
-                B --> D{Service Registry};
-                C --> D;
+                A --> D(Service C);
+                B --> E{Service Registry};
+                C --> E;
+                D --> E;
+                B -.-> F([Message Broker]);
+                C -.-> F;
+                B -.-> G([Configuration Server]);
+                C -.-> G;
+                D -.-> G;
+            """,
+            "considerations": """
+                - **Service Decomposition:** Carefully decompose your application into well-defined, independent services.
+                - **Communication:** Choose appropriate inter-service communication mechanisms (synchronous or asynchronous).
+                - **Data Management:** Each service manages its own data, requiring careful consideration of data consistency and transactions.
+                - **Monitoring and Logging:** Implement comprehensive monitoring and logging to track service health and performance.
+                - **Deployment:** Automate the deployment pipeline for each service.
             """,
         },
         "Serverless": {
-            "description": "A serverless architecture using API Gateway, Lambda functions, and DynamoDB.",
-            "components": ["API Gateway", "Lambda Function", "DynamoDB"],
+            "description": """
+                A cloud-native development model that allows you to build and run applications without managing servers. The cloud provider automatically provisions and scales the underlying infrastructure based on demand.
+                Serverless architectures are event-driven and highly scalable, offering cost savings for applications with variable workloads.
+            """,
+            "components": {
+                "API Gateway": "Handles API requests and routes them to the appropriate Lambda functions.",
+                "Lambda Functions (or equivalent)": "Small, stateless functions that execute in response to events (e.g., HTTP requests, messages, database updates).",
+                "DynamoDB (or other managed database)": "A fully managed NoSQL database service that scales automatically.",
+                "S3 (or other object storage)": "Stores static assets, such as images, videos, and documents.",
+                "Event Source": "Triggers the execution of Lambda functions (e.g., S3 events, DynamoDB streams, message queues).",
+            },
             "diagram": """
                 graph TD;
-                A[API Gateway] --> B(Lambda Function);
-                B --> C{DynamoDB};
+                A[API Gateway] --> B(Lambda Function 1);
+                A --> C(Lambda Function 2);
+                B --> D{DynamoDB};
+                C --> E{S3};
+                F([Event Source]) --> B;
+            """,
+            "considerations": """
+                - **Statelessness:** Lambda functions are stateless, so you need to manage state externally (e.g., in a database or cache).
+                - **Cold Starts:** Lambda functions can experience cold starts, which can add latency to the initial invocation.
+                - **Vendor Lock-in:** Serverless architectures can lead to vendor lock-in, as they are often tied to a specific cloud provider's services.
+                - **Debugging and Monitoring:** Debugging and monitoring serverless applications can be more complex than traditional applications.
+            """,
+        },
+        "Event-Driven Architecture": {
+            "description": """
+                A software architecture paradigm centered around the production, detection, consumption of, and reaction to events. An event represents a significant change in state. This pattern decouples services, making them more independent, scalable, and resilient.
+            """,
+            "components": {
+                "Event Producer": "Creates and publishes events to an event bus or message broker.",
+                "Event Bus/Message Broker": "Receives events from producers and routes them to appropriate consumers (e.g., Kafka, RabbitMQ, AWS SQS/SNS).",
+                "Event Consumer": "Subscribes to specific event types and processes them.",
+                "Event Store (Optional)": "Stores a log of all events for auditing, debugging, or replaying events.",
+            },
+            "diagram": """
+                graph TD;
+                A[Event Producer 1] --> B((Event Bus/Message Broker));
+                C[Event Producer 2] --> B;
+                B --> D(Event Consumer 1);
+                B --> E(Event Consumer 2);
+                B --> F{Event Store};
+            """,
+            "considerations": """
+                - **Event Design:** Carefully design your events to be granular, self-contained, and meaningful.
+                - **Asynchronous Communication:** Event-driven architectures rely on asynchronous communication, which can introduce complexities in terms of error handling and data consistency.
+                - **Eventual Consistency:** Data consistency may be eventual, as services process events independently and at their own pace.
+                - **Ordering and Duplication:** Handle event ordering and potential duplication of events, if necessary.
+            """,
+        },
+        "Big Data Architecture": {
+            "description": """
+                Designed to handle the ingestion, processing, storage, and analysis of massive volumes of data that are too large or complex for traditional database systems. These architectures often involve distributed computing, parallel processing, and specialized tools for big data analytics.
+            """,
+            "components": {
+                "Data Sources": "Various sources of big data, such as IoT devices, social media feeds, log files, and databases.",
+                "Data Ingestion": "Tools and processes for collecting and importing data from various sources into the big data system (e.g., Kafka, Flume, Sqoop).",
+                "Data Storage": "Distributed file systems (e.g., HDFS) or cloud-based object storage (e.g., S3, Azure Blob Storage) for storing large datasets.",
+                "Data Processing": "Frameworks for distributed data processing and analysis (e.g., Hadoop MapReduce, Spark, Flink).",
+                "Data Serving/Querying": "Databases or query engines optimized for analytical queries on large datasets (e.g., Hive, Presto, Impala).",
+                "Data Visualization/Reporting": "Tools for creating dashboards, reports, and visualizations to analyze the processed data (e.g., Tableau, Power BI).",
+            },
+            "diagram": """
+                graph TD;
+                A[Data Sources] --> B(Data Ingestion);
+                B --> C{Data Storage};
+                C --> D[Data Processing];
+                D --> E(Data Serving/Querying);
+                E --> F[Data Visualization/Reporting];
+            """,
+            "considerations": """
+                - **Data Volume and Velocity:** Design your architecture to handle the expected volume and velocity of data.
+                - **Data Variety:** Consider the different types of data (structured, semi-structured, unstructured) that your system needs to process.
+                - **Scalability and Elasticity:** Choose technologies that can scale horizontally to accommodate growing data volumes and processing needs.
+                - **Data Security and Governance:** Implement appropriate security measures and data governance policies to protect sensitive data.
             """,
         },
     }
@@ -401,12 +514,15 @@ with tab3:
 
     st.markdown(arch_patterns[selected_pattern]["description"])
     st.markdown("**Components:**")
-    for component in arch_patterns[selected_pattern]["components"]:
-        st.markdown(f"- {component}")
+    for component, description in arch_patterns[selected_pattern]["components"].items():
+        st.markdown(f"- **{component}:** {description}")
 
     # Render the Graphviz diagram using st.graphviz_chart
     graph = Source(arch_patterns[selected_pattern]["diagram"])
     st.graphviz_chart(graph)
+
+    st.markdown("**Key Considerations:**")
+    st.markdown(arch_patterns[selected_pattern]["considerations"])
 
     # --- Contact Form ---
     st.subheader("Contact Us for a Free Trial")
