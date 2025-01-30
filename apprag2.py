@@ -519,8 +519,20 @@ with tab3:
 
     # Render the Graphviz diagram using st.graphviz_chart
     st.markdown("**Architecture Diagram:**")
+    
     graph = Source(arch_patterns[selected_pattern]["diagram"])
-    st.graphviz_chart(graph)
+    st.graphviz_chart("diagram": """
+                graph TD;
+                A[Load Balancer] --> B(Web Server 1);
+                A --> C(Web Server 2);
+                B --> E(Application Server 1);
+                C --> F(Application Server 2);
+                E --> D{Database};
+                F --> D;
+                A -.-> G([CDN]);
+                B -.-> H([Caching Layer]);
+                C -.-> H;
+            """)
 
     st.markdown("**Key Considerations:**")
     st.markdown(arch_patterns[selected_pattern]["considerations"])
