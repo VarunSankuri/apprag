@@ -12,3 +12,6 @@ PyPDF2
 langchain-community
 pysqlite3-binary
 google-search-results
+pandas
+plotly.express
+re
