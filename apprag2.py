@@ -17,7 +17,6 @@ import pandas as pd
 import re
 import plotly.express as px
 from graphviz import Source
-import graphviz
 
 def install_graphviz_and_libs():
     try:
