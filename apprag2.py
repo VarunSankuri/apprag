@@ -16,7 +16,7 @@ from langchain_community.utilities import GoogleSearchAPIWrapper
 import pandas as pd
 import re
 import plotly.express as px
-# from graphviz import Source
+from graphviz import Source
 import graphviz
 
 # Function to validate email format
