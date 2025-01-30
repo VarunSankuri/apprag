@@ -519,7 +519,7 @@ with tab3:
         st.markdown(f"- **{component}:** {description}")
 
      # Render the Graphviz diagram using st.graphviz_chart
-    st.markdown("**Architecture Diagram:**")
+    # st.markdown("**Architecture Diagram:**")
 
     # Create a Graphviz graph directly
     graph = graphviz.Digraph()
