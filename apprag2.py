@@ -612,14 +612,15 @@ with tab1:
     example_question_1 = "What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?"
     example_question_2 = "I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?"
 
-    # Display example questions with copy buttons
-    if st.button(f"Copy:\n\n{example_question_1}", key="copy_q1"):
-        st.session_state.chat_input_value = example_question_1
-        st.success("Question 1 copied! (Paste in the chat box)")
+    # Use a form to prevent session state reset on button click
+    with st.form("question_form"):
+        if st.form_submit_button(f"Copy:\n\n{example_question_1}", key="copy_q1"):
+            st.session_state.chat_input_value = example_question_1
+            st.success("Question 1 copied! (Paste in the chat box)")
 
-    if st.button(f"Copy:\n\n{example_question_2}", key="copy_q2"):
-        st.session_state.chat_input_value = example_question_2
-        st.success("Question 2 copied! (Paste in the chat box)")
+        if st.form_submit_button(f"Copy:\n\n{example_question_2}", key="copy_q2"):
+            st.session_state.chat_input_value = example_question_2
+            st.success("Question 2 copied! (Paste in the chat box)")
 
     # Get user input - Initialize session state for chat input if it doesn't exist
     if "chat_input_value" not in st.session_state:
