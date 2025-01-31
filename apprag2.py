@@ -611,11 +611,8 @@ with tab1:
             height: 70px !important; /* Adjust height as needed */
         }
         
-        /* Increase height of chat message containers */
-        .stChatMessage {
-            height: 200px; /* Adjust if you want a fixed height, otherwise 'auto' is good */
-            min-height: 100px; /* Minimum height to prevent very small boxes */
-        }
+     
+        
         </style>
         """,
         unsafe_allow_html=True,
