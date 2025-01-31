@@ -602,6 +602,24 @@ with tab1:
     1.  What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?
     2.  I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?
     """)
+    # --- CUSTOM CSS FOR CHATBOX ---
+    st.markdown(
+        """
+        <style>
+        /* Increase height of chat input box */
+        div[data-baseweb="textarea"] {
+            height: 200px !important; /* Adjust height as needed */
+        }
+        
+        /* Increase height of chat message containers */
+        .stChatMessage {
+            height: auto; /* Adjust if you want a fixed height, otherwise 'auto' is good */
+            min-height: 100px; /* Minimum height to prevent very small boxes */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
     
     # Initialize chat history
     if "messages" not in st.session_state:
