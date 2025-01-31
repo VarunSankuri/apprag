@@ -596,63 +596,100 @@ with tab2:
         vector_index = Chroma.from_texts(texts, embeddings).as_retriever()
 
 with tab1:
-     # --- Example Questions ---
-    st.markdown("**Example Questions:**")
-    st.markdown("""
-    1.  What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?
-    2.  I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?
-    """)
-    
+    # --- Example Questions ---
+    st.markdown("**Example Questions:**")  # Make this bold again if you prefer
+    example_question_1 = "What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?"
+    example_question_2 = "I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?"
+
+    # Use columns for better layout
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button(f"Copy:\n\n{example_question_1}", key="copy_q1"):
+            st.session_state.chat_input_value = example_question_1
+            st.success("Question 1 copied! (Paste in the chat box)")
+    with col2:
+        if st.button(f"Copy:\n\n{example_question_2}", key="copy_q2"):
+            st.session_state.chat_input_value = example_question_2
+            st.success("Question 2 copied! (Paste in the chat box)")
+
     # Initialize chat history
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    # Display chat messages from history
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
+    # Create two containers: one for chat history, one for the chat input
+    chat_history_container = st.container()
+    chat_input_container = st.container()
 
-   
+    # Display chat messages from history in the dedicated container
+    with chat_history_container:
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
-    # Get user input
-    if question := st.chat_input("Ask your Cloud related questions here. For e.g. Compare AWS S3 storage classes and their use cases"):
-        # Add user message to chat history
-        st.session_state.messages.append({"role": "user", "content": question})
-        # Display user message in chat message container
-        with st.chat_message("user"):
-            st.markdown(question)
+    # Chat input at the bottom
+    with chat_input_container:
+        # Get user input - Initialize session state for chat input if it doesn't exist
+        if "chat_input_value" not in st.session_state:
+            st.session_state.chat_input_value = ""
 
-        # Get Relevant Documents (only if files were uploaded)
-        if uploaded_files:
-            docs = vector_index.get_relevant_documents(question)
+        if st.session_state.chat_input_value:
+            placeholder = "Paste your copied question here (Ctrl+V or Cmd+V)"
         else:
-            docs = []  # No documents to provide
+            placeholder = "Ask your Cloud related questions here."
 
-        # Define Prompt Template
-        prompt_template = """
-        You are a helpful AI assistant helping people answer their Cloud development and
-        deployment questions. Answer the question as detailed as possible from the provided context,
-        make sure to provide all the details and code if possible, if the answer is not in
-        provided context use your  knowledge or imagine an answer but never say that you don't have an answer
-        or can't provide an answer based on current context ",
+        question = st.chat_input(placeholder, key="chat_input")
+        if question:
+            # If a question was copied, use it
+            if st.session_state.chat_input_value and question == placeholder:
+                question = st.session_state.chat_input_value
 
-        Context:\n {context}?\n
-        Question: \n{question}\n
-        Answer:
-        """
+            # Add user message to chat history
+            st.session_state.messages.append({"role": "user", "content": question})
 
-        # Create Prompt
-        prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
+            # Display user message in chat message container (in the chat history container)
+            with chat_history_container:
+                with st.chat_message("user"):
+                    st.markdown(question)
 
-        # Load QA Chain
-        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=1, api_key=google_api_key)
-        chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
+            # Reset the chat input value
+            st.session_state.chat_input_value = ""
 
-        # Get Response
-        response = chain({"input_documents": docs, "question": question}, return_only_outputs=True)
+            # Get Relevant Documents (only if files were uploaded)
+            if uploaded_files:
+                docs = vector_index.get_relevant_documents(question)
+            else:
+                docs = []  # No documents to provide
 
-        # Add assistant response to chat history
-        st.session_state.messages.append({"role": "assistant", "content": response['output_text']})
-        # Display assistant response in chat message container
-        with st.chat_message("assistant"):
-            st.write(response['output_text'])
+            # Define Prompt Template
+            prompt_template = """
+            You are a helpful AI assistant helping people answer their Cloud development and
+            deployment questions. Answer the question as detailed as possible from the provided context,
+            make sure to provide all the details and code if possible, if the answer is not in
+            provided context use your  knowledge or imagine an answer but never say that you don't have an answer
+            or can't provide an answer based on current context ",
+
+            Context:\n {context}?\n
+            Question: \n{question}\n
+            Answer:
+            """
+
+            # Create Prompt
+            prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
+
+            # Load QA Chain
+            model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=1, api_key=google_api_key)
+            chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
+
+            # Get Response
+            response = chain({"input_documents": docs, "question": question}, return_only_outputs=True)
+
+            # Add assistant response to chat history
+            st.session_state.messages.append({"role": "assistant", "content": response['output_text']})
+
+            # Display assistant response in chat message container (in the chat history container)
+            with chat_history_container:
+                with st.chat_message("assistant"):
+                    st.write(response['output_text'])
+
+            # Force rerun to update the chat history
+            st.rerun()
