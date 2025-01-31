@@ -607,47 +607,18 @@ with tab1:
 
     # --- Example Questions ---
     st.markdown("**Example Questions:**")
-    # Use session state to track if example questions have been copied
-    if "example_question_1_copied" not in st.session_state:
-        st.session_state.example_question_1_copied = False
-    if "example_question_2_copied" not in st.session_state:
-        st.session_state.example_question_2_copied = False
+    st.markdown("""
+    1.  **What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?**
+    2.  **I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?**
+    """)
 
-    # Define the example questions
-    example_question_1 = "What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?"
-    example_question_2 = "I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?"
-
-    # Function to set the question in the chat input and mark as copied
-    def copy_question_to_input(question, question_key):
-        st.session_state.chat_input_value = question  # Set chat input value
-        st.session_state[question_key] = True
-
-    # Display example questions with copy buttons
-    if st.button(f"Copy: {example_question_1}", key="copy_q1"):
-        copy_question_to_input(example_question_1, "example_question_1_copied")
-    if st.session_state.example_question_1_copied:
-        st.success("Question 1 copied!")  # Show confirmation
-
-    if st.button(f"Copy: {example_question_2}", key="copy_q2"):
-        copy_question_to_input(example_question_2, "example_question_2_copied")
-    if st.session_state.example_question_2_copied:
-        st.success("Question 2 copied!")
-
-    # Get user input - Initialize session state for chat input if it doesn't exist
-    if "chat_input_value" not in st.session_state:
-        st.session_state.chat_input_value = ""
-
-    if question := st.chat_input("Ask your Cloud related questions here.", key="chat_input", value=st.session_state.get("chat_input_value", "")):
+    # Get user input
+    if question := st.chat_input("Ask your Cloud related questions here. For e.g. Compare AWS S3 storage classes and their use cases"):
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": question})
         # Display user message in chat message container
         with st.chat_message("user"):
             st.markdown(question)
-
-        # Reset the copied state and chat input value
-        st.session_state.example_question_1_copied = False
-        st.session_state.example_question_2_copied = False
-        st.session_state.chat_input_value = ""
 
         # Get Relevant Documents (only if files were uploaded)
         if uploaded_files:
