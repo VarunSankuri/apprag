@@ -596,6 +596,13 @@ with tab2:
         vector_index = Chroma.from_texts(texts, embeddings).as_retriever()
 
 with tab1:
+     # --- Example Questions ---
+    st.markdown("**Example Questions:**")
+    st.markdown("""
+    1.  What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?
+    2.  I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?
+    """)
+    
     # Initialize chat history
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -605,12 +612,7 @@ with tab1:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-    # --- Example Questions ---
-    st.markdown("**Example Questions:**")
-    st.markdown("""
-    1.  What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?
-    2.  I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?
-    """)
+   
 
     # Get user input
     if question := st.chat_input("Ask your Cloud related questions here. For e.g. Compare AWS S3 storage classes and their use cases"):
