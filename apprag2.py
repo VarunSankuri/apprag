@@ -608,7 +608,7 @@ with tab1:
         <style>
         /* Increase height of chat input box */
         div[data-baseweb="textarea"] {
-            height: 200px !important; /* Adjust height as needed */
+            height: 100px !important; /* Adjust height as needed */
         }
         
         /* Increase height of chat message containers */
