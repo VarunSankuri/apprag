@@ -612,6 +612,23 @@ with tab1:
     2.  **I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?**
     """)
 
+    # --- Example Questions ---
+    st.markdown("**Example Questions:**")
+
+    # Define the example questions
+    example_question_1 = "What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?"
+    example_question_2 = "I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?"
+
+    # Display example questions with copy buttons using st.code for better formatting
+    if st.button(f"Copy:\n\n{example_question_1}", key="copy_q1"):
+        st.session_state.chat_input_value = example_question_1
+        st.success("Question 1 copied!")
+
+    if st.button(f"Copy:\n\n{example_question_2}", key="copy_q2"):
+        st.session_state.chat_input_value = example_question_2
+        st.success("Question 2 copied!")
+
+
     # Get user input
     if question := st.chat_input("Ask your Cloud related questions here. For e.g. Compare AWS S3 storage classes and their use cases"):
         # Add user message to chat history
