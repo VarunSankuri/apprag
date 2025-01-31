@@ -595,6 +595,29 @@ with tab2:
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         vector_index = Chroma.from_texts(texts, embeddings).as_retriever()
 
+import streamlit as st
+from langchain.prompts import PromptTemplate
+from langchain.chains.question_answering import load_qa_chain
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import Chroma
+from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
+from dotenv import load_dotenv
+import PyPDF2
+import os
+import io
+from langchain_community.vectorstores import Chroma
+import pysqlite3  # Add this import
+import sys  # Add this import
+from langchain.agents import AgentType, initialize_agent, load_tools
+from langchain_community.utilities import GoogleSearchAPIWrapper
+import pandas as pd
+import re
+import plotly.express as px
+from graphviz import Source
+import graphviz
+
+# ... (rest of your imports)
+
 with tab1:
     # Initialize chat history
     if "messages" not in st.session_state:
@@ -612,7 +635,7 @@ with tab1:
     example_question_1 = "What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?"
     example_question_2 = "I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?"
 
-    # Display example questions with copy buttons using st.code for better formatting
+    # Display example questions with copy buttons
     if st.button(f"Copy:\n\n{example_question_1}", key="copy_q1"):
         st.session_state.chat_input_value = example_question_1
         st.success("Question 1 copied!")
@@ -625,7 +648,12 @@ with tab1:
     if "chat_input_value" not in st.session_state:
         st.session_state.chat_input_value = ""
 
-    if question := st.chat_input("Ask your Cloud related questions here.", key="chat_input", value=st.session_state.get("chat_input_value", "")):
+    question = st.chat_input("Ask your Cloud related questions here.", key="chat_input") # Remove value argument
+    if question:
+        # If there's a copied question, use it instead of what's typed
+        if st.session_state.chat_input_value:
+            question = st.session_state.chat_input_value
+
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": question})
         # Display user message in chat message container
