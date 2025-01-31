@@ -607,46 +607,18 @@ with tab1:
 
     # --- Example Questions ---
     st.markdown("**Example Questions:**")
+    st.markdown("""
+    1.  **What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?**
+    2.  **I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?**
+    """)
 
-    # Define the example questions
-    example_question_1 = "What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?"
-    example_question_2 = "I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?"
-
-    # Use a form to prevent session state reset on button click
-    with st.form("question_form"):
-        if st.form_submit_button(f"Copy:\n\n{example_question_1}", key="copy_q1"):
-            st.session_state.chat_input_value = example_question_1
-            st.success("Question 1 copied! (Paste in the chat box)")
-
-        if st.form_submit_button(f"Copy:\n\n{example_question_2}", key="copy_q2"):
-            st.session_state.chat_input_value = example_question_2
-            st.success("Question 2 copied! (Paste in the chat box)")
-
-    # Get user input - Initialize session state for chat input if it doesn't exist
-    if "chat_input_value" not in st.session_state:
-        st.session_state.chat_input_value = ""
-
-    # Use a placeholder if a question has been copied
-    if st.session_state.chat_input_value:
-        placeholder = "Paste your copied question here (Ctrl+V or Cmd+V)"
-    else:
-        placeholder = "Ask your Cloud related questions here."
-
-    question = st.chat_input(placeholder, key="chat_input")
-
-    if question:
-        # If a question was copied, use it
-        if st.session_state.chat_input_value and question == placeholder:
-            question = st.session_state.chat_input_value
-
+    # Get user input
+    if question := st.chat_input("Ask your Cloud related questions here. For e.g. Compare AWS S3 storage classes and their use cases"):
         # Add user message to chat history
         st.session_state.messages.append({"role": "user", "content": question})
         # Display user message in chat message container
         with st.chat_message("user"):
             st.markdown(question)
-
-        # Reset the chat input value
-        st.session_state.chat_input_value = ""
 
         # Get Relevant Documents (only if files were uploaded)
         if uploaded_files:
