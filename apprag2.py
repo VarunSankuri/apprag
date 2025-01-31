@@ -595,29 +595,6 @@ with tab2:
         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
         vector_index = Chroma.from_texts(texts, embeddings).as_retriever()
 
-import streamlit as st
-from langchain.prompts import PromptTemplate
-from langchain.chains.question_answering import load_qa_chain
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import Chroma
-from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
-from dotenv import load_dotenv
-import PyPDF2
-import os
-import io
-from langchain_community.vectorstores import Chroma
-import pysqlite3  # Add this import
-import sys  # Add this import
-from langchain.agents import AgentType, initialize_agent, load_tools
-from langchain_community.utilities import GoogleSearchAPIWrapper
-import pandas as pd
-import re
-import plotly.express as px
-from graphviz import Source
-import graphviz
-
-# ... (rest of your imports)
-
 with tab1:
     # Initialize chat history
     if "messages" not in st.session_state:
@@ -638,20 +615,27 @@ with tab1:
     # Display example questions with copy buttons
     if st.button(f"Copy:\n\n{example_question_1}", key="copy_q1"):
         st.session_state.chat_input_value = example_question_1
-        st.success("Question 1 copied!")
+        st.success("Question 1 copied! (Paste in the chat box)")
 
     if st.button(f"Copy:\n\n{example_question_2}", key="copy_q2"):
         st.session_state.chat_input_value = example_question_2
-        st.success("Question 2 copied!")
+        st.success("Question 2 copied! (Paste in the chat box)")
 
     # Get user input - Initialize session state for chat input if it doesn't exist
     if "chat_input_value" not in st.session_state:
         st.session_state.chat_input_value = ""
 
-    question = st.chat_input("Ask your Cloud related questions here.", key="chat_input") # Remove value argument
+    # Use a placeholder if a question has been copied
+    if st.session_state.chat_input_value:
+        placeholder = "Paste your copied question here (Ctrl+V or Cmd+V)"
+    else:
+        placeholder = "Ask your Cloud related questions here."
+
+    question = st.chat_input(placeholder, key="chat_input")
+
     if question:
-        # If there's a copied question, use it instead of what's typed
-        if st.session_state.chat_input_value:
+        # If a question was copied, use it
+        if st.session_state.chat_input_value and question == placeholder:
             question = st.session_state.chat_input_value
 
         # Add user message to chat history
