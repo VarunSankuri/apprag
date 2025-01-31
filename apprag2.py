@@ -628,7 +628,9 @@ with tab1:
         st.session_state.chat_input_value = example_question_2
         st.success("Question 2 copied!")
 
-
+        # Get user input - Initialize session state for chat input if it doesn't exist
+    if "chat_input_value" not in st.session_state:
+        st.session_state.chat_input_value = ""
     # Get user input
     if question := st.chat_input("Ask your Cloud related questions here. For e.g. Compare AWS S3 storage classes and their use cases"):
         # Add user message to chat history
