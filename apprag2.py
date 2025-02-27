@@ -190,9 +190,8 @@ with tab4:
 
         # Load the LLM
         model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key,
-                                       client_options=client_options.ClientOptions(
-                                           api_endpoint="generativelanguage.googleapis.com"
-                                       ))
+                                       client_options={"api_endpoint": "generativelanguage.googleapis.com"})
+
 
         # Construct the prompt with the curriculum step, user question, and evaluation instructions
         prompt = f"""You are a helpful AI assistant helping train people on Cloud development and deployment. 
@@ -665,8 +664,9 @@ with tab1:
         prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
 
         # Load QA Chain
-        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=1, api_key=google_api_key,client_options=client_options.ClientOptions(
-                                           api_endpoint="generativelanguage.googleapis.com"))
+        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key,
+                                       client_options={"api_endpoint": "generativelanguage.googleapis.com"})
+
         chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
 
         # Get Response
