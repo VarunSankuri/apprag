@@ -2,7 +2,7 @@ import streamlit as st
 from langchain.prompts import PromptTemplate
 from langchain.chains.question_answering import load_qa_chain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import Chroma
+# from langchain.vectorstores import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 import PyPDF2
@@ -11,7 +11,8 @@ import io
 from langchain_community.vectorstores import Chroma
 import pysqlite3  # Add this import
 import sys      # Add this import
-from langchain.agents import AgentType, initialize_agent, load_tools
+from langchain.agents import AgentType, initialize_agent
+from langchain_community.agent_toolkits.load_tools import load_tools
 from langchain_community.utilities import GoogleSearchAPIWrapper
 import pandas as pd
 import re
