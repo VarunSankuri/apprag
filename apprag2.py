@@ -189,7 +189,7 @@ with tab4:
         # ... (add user message to chat history and display it)
 
         # Load the LLM
-        model = ChatGoogleGenerativeAI(model="gemini-2.0-pro-latest", temperature=0, api_key=google_api_key,
+        model = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0, api_key=google_api_key,
                                        client_options={"api_endpoint": "generativelanguage.googleapis.com"})
 
 
