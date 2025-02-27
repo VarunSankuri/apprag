@@ -189,7 +189,7 @@ with tab4:
         # ... (add user message to chat history and display it)
 
         # Load the LLM
-        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key,
+        model = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0, api_key=google_api_key,
                                        client_options={"api_endpoint": "generativelanguage.googleapis.com"})
 
 
@@ -664,7 +664,7 @@ with tab1:
         prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
 
         # Load QA Chain
-        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key,
+        model = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0, api_key=google_api_key,
                                        client_options={"api_endpoint": "generativelanguage.googleapis.com"})
 
         chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
