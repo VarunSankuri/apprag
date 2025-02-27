@@ -189,7 +189,10 @@ with tab4:
         # ... (add user message to chat history and display it)
 
         # Load the LLM
-        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key)
+        model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0, api_key=google_api_key,
+                                       client_options=client_options.ClientOptions(
+                                           api_endpoint="generativelanguage.googleapis.com"
+                                       ))
 
         # Construct the prompt with the curriculum step, user question, and evaluation instructions
         prompt = f"""You are a helpful AI assistant helping train people on Cloud development and deployment. 
