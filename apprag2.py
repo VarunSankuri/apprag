@@ -20,6 +20,8 @@ import plotly.express as px
 from graphviz import Source
 import graphviz
 from google.api_core import client_options
+from langchain.memory import ConversationBufferMemory
+from langchain_community.tools import DuckDuckGoSearchRun
 
 # Function to validate email format
 def is_valid_email(email):
