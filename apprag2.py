@@ -64,7 +64,11 @@ def generate_response_with_sources(question, vector_index, llm):
         docs = []
 
     prompt_template = """
-    You are a helpful AI assistant... (rest of your prompt, including citation instructions)
+    You are a helpful AI assistant helping people answer their Cloud development and 
+    deployment questions. Answer the question as detailed as possible from the provided context, 
+    make sure to provide all the details and code if possible, if the answer is not in 
+    provided context use your  knowledge or imagine an answer but never say that you don't have an answer
+    or can't provide an answer based on current context
     """
     prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
     responses = []
