@@ -20,6 +20,8 @@ import plotly.express as px
 from graphviz import Source
 import graphviz
 from google.api_core import client_options
+from langchain.memory import ConversationBufferMemory
+from langchain_community.tools import DuckDuckGoSearchRun
 # Swap sqlite3 with pysqlite3-binary
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 import chromadb
