@@ -647,10 +647,33 @@ with tab3:
     if st.session_state.form_submitted:
         st.success("Thank you for your interest! We'll be in touch soon.")
 
-# with tab2:
+# with tab1:
+#     # --- Example Questions ---
+#     st.markdown("**Example Questions:**")
+#     st.markdown("""
+#     1.  What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?
+#     2.  I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?
+#     """)
+#     # --- CUSTOM CSS FOR CHATBOX ---
+#     st.markdown(
+#         """
+#         <style>
+#         /* Increase height of chat input box */
+#         div[data-baseweb="textarea"] {
+#             height: 70px !important; /* Adjust height as needed */
+#         }
+        
+     
+        
+#         </style>
+#         """,
+#         unsafe_allow_html=True,
+#     )
+    
+#     # --- File Upload ---
 #     st.caption("Although not necessary, you can upload your PDFs here to get more accurate answers/code")
-#     # File Upload with multiple file selection
 #     uploaded_files = st.file_uploader("Upload PDF files", type=["pdf"], accept_multiple_files=True)
+
 
 #     if uploaded_files:
 #         st.text("PDF Files Uploaded Successfully!")
@@ -678,29 +701,6 @@ with tab3:
 #         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 #         vector_index = Chroma.from_texts(texts, embeddings).as_retriever()
 
-# with tab1:
-#      # --- Example Questions ---
-#     st.markdown("**Example Questions:**")
-#     st.markdown("""
-#     1.  What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?
-#     2.  I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?
-#     """)
-#     # --- CUSTOM CSS FOR CHATBOX ---
-#     st.markdown(
-#         """
-#         <style>
-#         /* Increase height of chat input box */
-#         div[data-baseweb="textarea"] {
-#             height: 70px !important; /* Adjust height as needed */
-#         }
-        
-     
-        
-#         </style>
-#         """,
-#         unsafe_allow_html=True,
-#     )
-    
 #     # Initialize chat history
 #     if "messages" not in st.session_state:
 #         st.session_state.messages = []
@@ -721,7 +721,7 @@ with tab3:
 #             st.markdown(question)
 
 #         # Get Relevant Documents (only if files were uploaded)
-#         if uploaded_files:
+#         if 'vector_index' in locals(): # Check if vector_index exists (files were uploaded)
 #             docs = vector_index.get_relevant_documents(question)
 #         else:
 #             docs = []  # No documents to provide
@@ -756,114 +756,129 @@ with tab3:
 #         # Display assistant response in chat message container
 #         with st.chat_message("assistant"):
 #             st.write(response['output_text'])
+
 with tab1:
-    # --- Example Questions ---
-    st.markdown("**Example Questions:**")
-    st.markdown("""
-    1.  What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?
-    2.  I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?
-    """)
-    # --- CUSTOM CSS FOR CHATBOX ---
-    st.markdown(
-        """
-        <style>
-        /* Increase height of chat input box */
-        div[data-baseweb="textarea"] {
-            height: 70px !important; /* Adjust height as needed */
-        }
-        
-     
-        
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-    
-    # --- File Upload ---
-    st.caption("Although not necessary, you can upload your PDFs here to get more accurate answers/code")
-    uploaded_files = st.file_uploader("Upload PDF files", type=["pdf"], accept_multiple_files=True)
+    with st.expander("Cloud Expert Chat"):
+        # --- Example Questions ---
+        st.markdown("**Example Questions:**")
+        st.markdown("""
+        1.  What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?
+        2.  I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?
+        """)
+        # --- CUSTOM CSS FOR CHATBOX ---
+        st.markdown(
+            """
+            <style>
+            /* Increase height of chat input box */
+            div[data-baseweb="textarea"] {
+                height: 70px !important; /* Adjust height as needed */
+            }
+            </style>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        # --- File Upload ---
+        st.caption("Although not necessary, you can upload your PDFs here to get more accurate answers/code")
+        uploaded_files = st.file_uploader("Upload PDF files", type=["pdf"], accept_multiple_files=True)
+
+        # Initialize vector_index outside the conditional
+        vector_index = None
+        if uploaded_files:
+            st.text("PDF Files Uploaded Successfully!")
+            vector_index = process_pdfs(uploaded_files)  # Use the function
+            if vector_index is None:  # Handle potential processing errors
+                st.error("Could not process PDF files.  See errors above.")
+                return  # Exit early if PDF processing fails
+
+            if st.button("Summarize PDFs"):
+                with st.spinner("Summarizing..."):
+                    prompt_template = """
+                    You are a helpful AI assistant.  Provide a concise summary of the following text:
+
+                    {text}
+
+                    Summary:
+                    """
+                    prompt = PromptTemplate(template=prompt_template, input_variables=["text"])
+                    llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0,
+                                                 api_key=google_api_key,
+                                                 client_options={
+                                                     "api_endpoint": "generativelanguage.googleapis.com"})
+                    chain = load_qa_chain(llm, chain_type="stuff", prompt=prompt)
+
+                    if uploaded_files:
+                      all_texts = []
+                      for uploaded_file in uploaded_files:
+                        # PDF Processing
+                        pdf_data = uploaded_file.read()
+                        pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_data))
+                        pdf_pages = pdf_reader.pages
+
+                        # Extract text from all pages and add to the combined context
+                        context = "\n\n".join(page.extract_text() for page in pdf_pages)
+                        all_texts.append(context)
+
+                    # Combine all contexts into a single string
+                    combined_context = "\n\n".join(all_texts)
+                    # Use the combined context for the summary
+                    summary = chain.run(combined_context)  # Use .run()
+                    st.subheader("Summary:")
+                    st.write(summary)
 
 
-    if uploaded_files:
-        st.text("PDF Files Uploaded Successfully!")
+        # Initialize chat history and memory
+        if "messages" not in st.session_state:
+            st.session_state.messages = []
+        if "memory" not in st.session_state:
+             st.session_state.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
-        # Combine all PDF content
-        all_texts = []
-        for uploaded_file in uploaded_files:
-            # PDF Processing
-            pdf_data = uploaded_file.read()
-            pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_data))
-            pdf_pages = pdf_reader.pages
 
-            # Extract text from all pages and add to the combined context
-            context = "\n\n".join(page.extract_text() for page in pdf_pages)
-            all_texts.append(context)
+        # Display chat messages from history
+        for message in st.session_state.messages:
+            if message["role"] not in ["feedback"]: #Don't display feedback in chat
+                with st.chat_message(message["role"]):
+                    st.markdown(message["content"])
 
-        # Combine all contexts into a single string
-        combined_context = "\n\n".join(all_texts)
+        # Get user input
+        if question := st.chat_input("Ask your Cloud related questions here, or upload a PDF for more specific answers."):
+            # Add user message to chat history
+            st.session_state.messages.append({"role": "user", "content": question})
+            # Display user message in chat message container
+            with st.chat_message("user"):
+                st.markdown(question)
 
-        # Split Texts
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=200)
-        texts = text_splitter.split_text(combined_context)
+            with st.spinner('Generating response...'):
+                llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0,
+                                             api_key=google_api_key,
+                                             client_options={"api_endpoint": "generativelanguage.googleapis.com"})
 
-        # Chroma Embeddings
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-        vector_index = Chroma.from_texts(texts, embeddings).as_retriever()
+                # Choose between agent and direct QA based on a condition (e.g., a checkbox)
+                use_agent = st.checkbox("Use Agent for Web Search (experimental)", value=False)  # Default to False
 
-    # Initialize chat history
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
+                if use_agent:
+                    response_text = generate_response_agent(question, vector_index, st.session_state.memory, llm)
+                else:
+                    response_text = generate_response_with_sources(question, vector_index, llm)
 
-    # Display chat messages from history
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
 
-   
 
-    # Get user input
-    if question := st.chat_input("Ask your Cloud related questions here."):
-        # Add user message to chat history
-        st.session_state.messages.append({"role": "user", "content": question})
-        # Display user message in chat message container
-        with st.chat_message("user"):
-            st.markdown(question)
+                st.session_state.messages.append({"role": "assistant", "content": response_text})
+                with st.chat_message("assistant"):
+                    st.write(response_text)
 
-        # Get Relevant Documents (only if files were uploaded)
-        if 'vector_index' in locals(): # Check if vector_index exists (files were uploaded)
-            docs = vector_index.get_relevant_documents(question)
-        else:
-            docs = []  # No documents to provide
+            # --- Feedback ---
+            col1, col2, _ = st.columns([1, 1, 10])  # Create columns for buttons
+            with col1:
+                if st.button("👍"):
+                    # Store feedback (thumbs up)
+                    st.session_state.messages.append({"role": "feedback", "content": "👍"})
+                    st.toast("Thank you for your feedback!", icon="👍")
 
-        # Define Prompt Template
-        prompt_template = """
-        You are a helpful AI assistant helping people answer their Cloud development and
-        deployment questions. Answer the question as detailed as possible from the provided context,
-        make sure to provide all the details and code if possible, if the answer is not in
-        provided context use your  knowledge or imagine an answer but never say that you don't have an answer
-        or can't provide an answer based on current context ",
-
-        Context:\n {context}?\n
-        Question: \n{question}\n
-        Answer:
-        """
-
-        # Create Prompt
-        prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
-
-        # Load QA Chain
-        model = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0, api_key=google_api_key,
-                                       client_options={"api_endpoint": "generativelanguage.googleapis.com"})
-
-        chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
-
-        # Get Response
-        response = chain({"input_documents": docs, "question": question}, return_only_outputs=True)
-
-        # Add assistant response to chat history
-        st.session_state.messages.append({"role": "assistant", "content": response['output_text']})
-        # Display assistant response in chat message container
-        with st.chat_message("assistant"):
-            st.write(response['output_text'])
+            with col2:
+                if st.button("👎"):
+                    # Store feedback (thumbs down)
+                    st.session_state.messages.append({"role": "feedback", "content": "👎"})
+                    st.toast("Thank you for your feedback!", icon="👎")
 
     
