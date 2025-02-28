@@ -22,18 +22,95 @@ import graphviz
 from google.api_core import client_options
 from langchain.memory import ConversationBufferMemory
 from langchain_community.tools import DuckDuckGoSearchRun
+# Swap sqlite3 with pysqlite3-binary
+sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+import chromadb
+chromadb.api.client.SharedSystemClient.clear_system_cache()
 
 # Function to validate email format
 def is_valid_email(email):
     pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
     return re.match(pattern, email) is not None
 
-# Swap sqlite3 with pysqlite3-binary
-sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+def process_pdfs(uploaded_files):
+    """Processes uploaded PDF files, extracts text, and creates embeddings."""
+    if not uploaded_files:
+        return None  # Or raise an exception
 
-import chromadb
+    all_texts = []
+    for uploaded_file in uploaded_files:
+        try:
+            pdf_data = uploaded_file.read()
+            pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_data))
+            context = "\n\n".join(page.extract_text() for page in pdf_reader.pages)
+            all_texts.append(context)
+        except PyPDF2.errors.PdfReadError:
+            st.error(f"Error reading {uploaded_file.name}.  Please ensure it is a valid PDF.")
+            return None  # Stop if a file is invalid
+        except Exception as e:
+            st.error(f"An unexpected error occurred processing {uploaded_file.name}: {e}")
+            return None
+    combined_context = "\n\n".join(all_texts)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=200)
+    texts = text_splitter.split_text(combined_context)
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    return Chroma.from_texts(texts, embeddings).as_retriever()
 
-chromadb.api.client.SharedSystemClient.clear_system_cache()
+def generate_response_with_sources(question, vector_index, llm):
+    """Generates a response using the LLM and context, including source citations."""
+    if vector_index:
+        docs = vector_index.get_relevant_documents(question)
+    else:
+        docs = []
+
+    prompt_template = """
+    You are a helpful AI assistant helping people answer their Cloud development and
+    deployment questions. Answer the question as detailed as possible from the provided context,
+    make sure to provide all the details and code if possible.  If the answer is not in
+    provided context, use your knowledge. Always cite your sources from the context using the filename.
+
+    Context:
+    {context}
+
+    Question: {question}
+    Answer:
+    """
+    prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
+
+    responses = []
+    for doc in docs:
+        source = os.path.basename(doc.metadata.get('source', 'Unknown Source')) # Safely get source
+        answer = llm.predict(prompt.format(context=doc.page_content, question=question))
+        responses.append(f"Answer (Source: {source}): {answer}")
+
+    if not responses:  # If no context documents were used.
+        return llm.predict(prompt.format(context="", question=question)) #Still uses knowledge
+    return "\n\n".join(responses)
+
+def generate_response_agent(question, vector_index, memory, llm):
+    """Generates a response using a LangChain agent."""
+    if vector_index:
+        docs = vector_index.get_relevant_documents(question)
+    else:
+        docs = []
+
+    search = DuckDuckGoSearchRun()  # Initialize the search tool
+    tools = [search]
+
+    agent_chain = initialize_agent(tools, llm, agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory)
+    # Combine context and question for the agent
+    if docs:
+        context_str = "\n\n".join([f"Context from {os.path.basename(doc.metadata.get('source', 'Unknown Source'))}:\n{doc.page_content}" for doc in docs])
+        full_input = f"Here is some relevant context:\n{context_str}\n\nQuestion: {question}"
+    else:
+        full_input = question
+    try:
+        response = agent_chain.run(input=full_input)
+    except Exception as e:
+        response = f"An error occurred: {e}"
+    return response
+
+
 
 st.title("Cloud Current")
 st.markdown("""
