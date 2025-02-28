@@ -61,7 +61,7 @@ if google_api_key is None:
     st.stop()
 
 tab1, tab3, tab4 = st.tabs(
-    ["Chat Bot", "Decision Support for Organizations","Learning Space for Students"]
+    ["Cloud Expert Chat", "Decision Support for Organizations","Learning Space for Students"]
 )
 
 
