@@ -731,7 +731,36 @@ with tab1:
             if use_agent:
                 response_text = generate_response_agent(question, vector_index, st.session_state.memory, llm)
             else:
-                response_text = generate_response_with_sources(question, vector_index, llm)
+                # --- MODIFIED PROMPT TEMPLATE ---
+                prompt_template = """
+                You are a helpful AI assistant helping people answer their Cloud development and
+                deployment questions. Answer the question as detailed as possible from the provided context,
+                make sure to provide all the details and code if possible.  If the answer is not in
+                provided context, use your knowledge. Always cite your sources from the context using the filename.
+
+                Context:
+                {context}
+
+                Question: {question}
+                Answer:
+                """
+                prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
+
+                # --- Using the QA Chain ---
+                chain = load_qa_chain(llm, chain_type="stuff", prompt=prompt, memory=st.session_state.memory)
+
+                if vector_index:
+                    docs = vector_index.get_relevant_documents(question)
+                else:
+                    docs = []
+
+                # --- Correctly pass inputs to the chain ---
+                response = chain({"input_documents": docs, "question": question, "chat_history": []}, return_only_outputs=True) #Pass chat history
+                response_text = response['output_text']
+
+
+
+                # --- (No need for the separate qa_with_sources function anymore) ---
 
             st.session_state.messages.append({"role": "assistant", "content": response_text})
             with st.chat_message("assistant"):
