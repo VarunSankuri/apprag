@@ -102,7 +102,7 @@ def generate_response_agent(question, vector_index, memory, llm):
         response = "An error occurred with the Agent"
     return response
 
-st.title("Cloud Current")
+st.title("Cloud Current 2.0")
 st.markdown("""
 <style>
 .big-font {
@@ -111,9 +111,14 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 st.markdown('<p class="big-font">Developed by Varun Sankuri</p>', unsafe_allow_html=True)
-st.caption("Frustrated with ChatGPT and Google Gemini giving you outdated cloud info? Big box models can't keep up with the Cloud's rapid pace."
-            " CloudCurrent is updated much more frequently and also lets you upload your OWN PDFs to get the most accurate, "
-            "'up-to-the-minute answers'. Try it now!")
+st.caption("""
+Tired of generic, outdated cloud advice? Cloud Current 2.0 is here, supercharged by the power of Gemini 2.5 to deliver intelligent, up-to-the-minute answers. We've added powerful new features for everyone:
+
+* **For Organizations:** Use the **Decision Support** tab to analyze costs, compare providers, and explore proven architecture patterns.
+* **For Students:** Jump into our **Learning Space** for a guided, interactive curriculum to build your cloud skills from the ground up.
+
+Get the most accurate cloud answers and tools, all in one place.
+""")
 # st.caption("Example questions: Compare S3 storage classes and their use cases, or upload a file and ask the bot to Summarize the file")
 st.caption("For questions contact cloudcurrentapp@gmail.com")
 
