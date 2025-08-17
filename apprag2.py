@@ -27,6 +27,16 @@ sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 import chromadb
 chromadb.api.client.SharedSystemClient.clear_system_cache()
 
+# --- SIDEBAR ---
+with st.sidebar:
+    # To add a logo, save an image file in the same directory and use st.image()
+    # For example: st.image("logo.png") 
+    st.title("Cloud Current 2.5")
+    st.info(
+        "This app is a comprehensive toolkit for cloud professionals and students, "
+        "powered by Google Gemini. Use the tabs above to navigate between features."
+    )
+
 # Function to validate email format
 def is_valid_email(email):
     pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -135,7 +145,7 @@ if google_api_key is None:
     st.stop()
 
 tab1, tab3, tab4, release_notes_tab = st.tabs(
-    ["Cloud Expert Chat", "Decision Support for Organizations", "Learning Space for Students", "Release Notes"]
+    ["☁️ Cloud Expert Chat", "💼 Decision Support", "🎓 Learning Space", "📜 Release Notes"]
 )
 
 
