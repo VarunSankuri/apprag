@@ -258,7 +258,7 @@ with tab4:
         # ... (add user message to chat history and display it)
 
         # Load the LLM
-        model = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0, api_key=google_api_key,
+        model = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0, api_key=google_api_key,
                                        client_options={"api_endpoint": "generativelanguage.googleapis.com"})
 
 
@@ -682,7 +682,7 @@ with tab3:
 #                 Summary:
 #                 """
 #                 prompt = PromptTemplate(template=prompt_template, input_variables=["text"])
-#                 llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0,
+#                 llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0,
 #                                                 api_key=google_api_key,
 #                                                 client_options={
 #                                                     "api_endpoint": "generativelanguage.googleapis.com"})
@@ -722,7 +722,7 @@ with tab3:
 #             st.markdown(question)
 
 #         with st.spinner('Generating response...'):  # Spinner for response generation
-#             llm = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0,
+#             llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0,
 #                                             api_key=google_api_key,
 #                                             client_options={"api_endpoint": "generativelanguage.googleapis.com"})
 
@@ -874,7 +874,7 @@ with tab1:
         prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
 
         # Load QA Chain
-        model = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0, api_key=google_api_key,
+        model = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0, api_key=google_api_key,
                                        client_options={"api_endpoint": "generativelanguage.googleapis.com"})
 
         chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
