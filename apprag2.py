@@ -28,28 +28,34 @@ import chromadb
 chromadb.api.client.SharedSystemClient.clear_system_cache()
 
 # --- SIDEBAR ---
+# --- SIDEBAR CONFIGURATION ---
 with st.sidebar:
-    st.image("image1.png", use_container_width=True)
+    st.image("logo.png", use_container_width=True)
     st.title("Cloud Current 2.5")
 
+    st.subheader("How to Use This App")
     st.info(
         """
-        **Welcome to your AI Cloud Co-Pilot!**
+        * **☁️ Cloud Expert Chat:** Ask any cloud-related question or upload a PDF for context-aware answers.
+        
+        * **💼 Decision Support:** Analyze cloud costs and explore common architecture patterns for your projects.
+        
+        * **🎓 Learning Space:** Follow our guided curriculum to build your cloud skills from scratch.
 
-        Here's how to use the app:
-        
-        * **☁️ Cloud Expert Chat:** Ask any cloud-related question. For specific answers, upload your own PDF documents!
-        
-        * **💼 Decision Support:** Use our tools to calculate project costs and visualize different cloud architectures.
-        
-        * **🎓 Learning Space:** New to the cloud? Follow our step-by-step curriculum to master the fundamentals.
-
-        * **📜 Release Notes:** See what's new and track our latest updates.
-        
         Select a feature from the tabs above to get started.
         """
     )
+    
+    st.divider()
 
+    st.subheader("About")
+    st.markdown(
+        """
+        This app is supercharged by **Gemini 2.5 Pro** to deliver intelligent, up-to-the-minute answers and tools for students and professionals.
+        """
+    )
+    
+    st.caption("For questions or feedback, please contact: cloudcurrentapp@gmail.com")
 # Function to validate email format
 def is_valid_email(email):
     pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
@@ -134,16 +140,16 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 st.markdown('<p class="big-font">Developed by Varun Sankuri</p>', unsafe_allow_html=True)
-st.caption("""
-Tired of generic, outdated cloud advice? Cloud Current 2.0 is here, supercharged by the power of Gemini 2.5 to deliver intelligent, up-to-the-minute answers. We've added powerful new features for everyone:
+# st.caption("""
+# Tired of generic, outdated cloud advice? Cloud Current 2.0 is here, supercharged by the power of Gemini 2.5 to deliver intelligent, up-to-the-minute answers. We've added powerful new features for everyone:
 
-* **For Organizations:** Use the **Decision Support** tab to analyze costs, compare providers, and explore proven architecture patterns.
-* **For Students:** Jump into our **Learning Space** for a guided, interactive curriculum to build your cloud skills from the ground up.
+# * **For Organizations:** Use the **Decision Support** tab to analyze costs, compare providers, and explore proven architecture patterns.
+# * **For Students:** Jump into our **Learning Space** for a guided, interactive curriculum to build your cloud skills from the ground up.
 
-Get the most accurate cloud answers and tools, all in one place.
-""")
-# st.caption("Example questions: Compare S3 storage classes and their use cases, or upload a file and ask the bot to Summarize the file")
-st.caption("For questions contact cloudcurrentapp@gmail.com")
+# Get the most accurate cloud answers and tools, all in one place.
+# """)
+# # st.caption("Example questions: Compare S3 storage classes and their use cases, or upload a file and ask the bot to Summarize the file")
+# st.caption("For questions contact cloudcurrentapp@gmail.com")
 
 # Load environment variables from .env file
 load_dotenv()
