@@ -134,8 +134,8 @@ if google_api_key is None:
     st.warning("API key not found. Please set the google_api_key environment variable.")
     st.stop()
 
-tab1, tab3, tab4 = st.tabs(
-    ["Cloud Expert Chat", "Decision Support for Organizations","Learning Space for Students"]
+tab1, tab3, tab4, release_notes_tab = st.tabs(
+    ["Cloud Expert Chat", "Decision Support for Organizations", "Learning Space for Students", "Release Notes"]
 )
 
 
@@ -892,5 +892,54 @@ with tab1:
         # Display assistant response in chat message container
         with st.chat_message("assistant"):
             st.write(response['output_text'])
+
+with release_notes_tab:
+    st.header("Cloud Current Release Notes 📜")
+    st.markdown("""
+    Welcome to the official release history of Cloud Current. Follow our journey from a simple chatbot to a comprehensive cloud toolkit!
+
+    ---
+
+    ### August 10, 2025 — v2.5
+    * **🚀 Model Upgrade:** The app is now powered by the state-of-the-art **Gemini 2.5 Pro**! Expect more nuanced, accurate, and faster responses across all features.
+    * **⚙️ Enhancement:** Optimized the PDF processing logic for faster embedding and retrieval in the "Cloud Expert Chat".
+
+    ---
+
+    ### July 22, 2025 — v2.1
+    * **📊 Enhancement:** Improved visualizations in the "Decision Support" tab for clearer cost breakdowns and architecture diagrams.
+    * **🐛 Optimization:** General performance tuning and bug fixes based on user feedback from the v2.0 launch.
+
+    ---
+
+    ### June 15, 2025 — v2.0: The Toolkit Update!
+    * **✨ New Feature:** Introduced the **"Decision Support for Organizations"** tab. This new section includes a cloud cost calculator and interactive architecture design guides.
+    * **✨ New Feature:** Launched the **"Learning Space for Students"** tab, featuring a guided curriculum to help new users master cloud fundamentals.
+    * **🧠 Model Upgrade:** Backend model updated to **Gemini 2.0** to better handle the complex, multi-faceted queries required by the new tabs.
+
+    ---
+
+    ### April 5, 2025 — v1.7
+    * **🤖 New Feature (Experimental):** Added an agent with web search capabilities to the "Cloud Expert Chat" for answering questions about the very latest cloud services and news.
+    * **🎨 UI/UX:** Refined the chat interface for better readability and a cleaner look.
+
+    ---
+
+    ### February 18, 2025 — v1.5
+    * **🚀 Model Upgrade:** Upgraded the core model to **Gemini 1.5 Pro**, significantly improving the accuracy of answers, especially for code generation and context-heavy questions from PDFs.
+    * **⚙️ Enhancement:** Increased the file size limit for PDF uploads.
+
+    ---
+    
+    ### December 9, 2024 — v1.2
+    * **✨ New Feature:** You can now **upload your own PDF documents**! Cloud Current can now answer questions based on your custom documentation, architectural diagrams, and reports.
+    * **✨ New Feature:** Added a "Summarize PDFs" button for quick overviews of uploaded content.
+
+    ---
+    
+    ### October 28, 2024 — v1.0: Liftoff! 🎉
+    * **🚀 Launch:** The first version of **Cloud Current** is live!
+    * **✨ Core Feature:** A conversational AI assistant focused on providing up-to-date answers to cloud development and deployment questions on AWS, GCP, and Azure.
+    """)
 
     
