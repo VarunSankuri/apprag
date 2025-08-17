@@ -29,7 +29,7 @@ chromadb.api.client.SharedSystemClient.clear_system_cache()
 
 # --- SIDEBAR ---
 with st.sidebar:
-    st.image("logo.png", use_container_width=True)
+    st.image("image1.png", use_container_width=True)
     st.title("Cloud Current 2.5")
 
     st.info(
