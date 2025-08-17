@@ -29,11 +29,25 @@ chromadb.api.client.SharedSystemClient.clear_system_cache()
 
 # --- SIDEBAR ---
 with st.sidebar:
-    st.image("image1.png", use_column_width=True)
+    st.image("logo.png", use_container_width=True)
     st.title("Cloud Current 2.5")
+
     st.info(
-        "This app is a comprehensive toolkit for cloud professionals and students, "
-        "powered by Google Gemini."
+        """
+        **Welcome to your AI Cloud Co-Pilot!**
+
+        Here's how to use the app:
+        
+        * **☁️ Cloud Expert Chat:** Ask any cloud-related question. For specific answers, upload your own PDF documents!
+        
+        * **💼 Decision Support:** Use our tools to calculate project costs and visualize different cloud architectures.
+        
+        * **🎓 Learning Space:** New to the cloud? Follow our step-by-step curriculum to master the fundamentals.
+
+        * **📜 Release Notes:** See what's new and track our latest updates.
+        
+        Select a feature from the tabs above to get started.
+        """
     )
 
 # Function to validate email format
