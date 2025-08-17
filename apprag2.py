@@ -671,7 +671,7 @@ with tab3:
     if st.session_state.form_submitted:
         st.success("Thank you for your interest! We'll be in touch soon.")
 
-
+                
 # with tab1:
 #     # --- Example Questions ---
 #     st.markdown("**Example Questions:**")
@@ -687,138 +687,108 @@ with tab3:
 #         div[data-baseweb="textarea"] {
 #             height: 70px !important; /* Adjust height as needed */
 #         }
+        
+     
+        
 #         </style>
 #         """,
 #         unsafe_allow_html=True,
 #     )
-
+    
 #     # --- File Upload ---
 #     st.caption("Although not necessary, you can upload your PDFs here to get more accurate answers/code")
 #     uploaded_files = st.file_uploader("Upload PDF files", type=["pdf"], accept_multiple_files=True)
 
-#     # Initialize vector_index outside the conditional
-#     vector_index = None
+
 #     if uploaded_files:
 #         st.text("PDF Files Uploaded Successfully!")
-#         with st.spinner("Processing PDF files..."):  # Spinner for PDF processing
-#             vector_index = process_pdfs(uploaded_files)  # Use the function
-#         if vector_index is None:  # Handle potential processing errors
-#             st.error("Could not process PDF files.  See errors above.")
-#             st.stop() #prevent further execution
 
-#         if st.button("Summarize PDFs"):
-#             with st.spinner("Summarizing..."):
-#                 prompt_template = """
-#                 You are a helpful AI assistant.  Provide a concise summary of the following text:
+#         # Combine all PDF content
+#         all_texts = []
+#         for uploaded_file in uploaded_files:
+#             # PDF Processing
+#             pdf_data = uploaded_file.read()
+#             pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_data))
+#             pdf_pages = pdf_reader.pages
 
-#                 {text}
+#             # Extract text from all pages and add to the combined context
+#             context = "\n\n".join(page.extract_text() for page in pdf_pages)
+#             all_texts.append(context)
 
-#                 Summary:
-#                 """
-#                 prompt = PromptTemplate(template=prompt_template, input_variables=["text"])
-#                 llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0,
-#                                                 api_key=google_api_key,
-#                                                 client_options={
-#                                                     "api_endpoint": "generativelanguage.googleapis.com"})
-#                 chain = load_qa_chain(llm, chain_type="stuff", prompt=prompt)
-#                 if uploaded_files: #Double-check files still uploaded
-#                     all_texts = []
-#                     for uploaded_file in uploaded_files:
-#                         pdf_data = uploaded_file.read()
-#                         pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_data))
-#                         context = "\n\n".join(page.extract_text() for page in pdf_reader.pages)
-#                         all_texts.append(context)
+#         # Combine all contexts into a single string
+#         combined_context = "\n\n".join(all_texts)
 
-#                     combined_context = "\n\n".join(all_texts)
-#                     summary = chain.run(combined_context)
-#                     st.subheader("Summary:")
-#                     st.write(summary)
+#         # Split Texts
+#         text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=200)
+#         texts = text_splitter.split_text(combined_context)
 
+#         # Chroma Embeddings
+#         embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+#         vector_index = Chroma.from_texts(texts, embeddings).as_retriever()
 
-
-#     # Initialize chat history and memory
+#     # Initialize chat history
 #     if "messages" not in st.session_state:
 #         st.session_state.messages = []
-#     if "memory" not in st.session_state:
-#          st.session_state.memory = ConversationBufferMemory(memory_key="chat_history", return_messages=True)
 
-
-#     # Display chat messages
+#     # Display chat messages from history
 #     for message in st.session_state.messages:
-#         if message["role"] not in ["feedback"]:
-#             with st.chat_message(message["role"]):
-#                 st.markdown(message["content"])
+#         with st.chat_message(message["role"]):
+#             st.markdown(message["content"])
+
+   
 
 #     # Get user input
-#     if question := st.chat_input("Ask your Cloud related questions here, or upload a PDF for more specific answers."):
+#     if question := st.chat_input("Ask your Cloud related questions here."):
+#         # Add user message to chat history
 #         st.session_state.messages.append({"role": "user", "content": question})
+#         # Display user message in chat message container
 #         with st.chat_message("user"):
 #             st.markdown(question)
 
-#         with st.spinner('Generating response...'):  # Spinner for response generation
-#             llm = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0,
-#                                             api_key=google_api_key,
-#                                             client_options={"api_endpoint": "generativelanguage.googleapis.com"})
+#         # Get Relevant Documents (only if files were uploaded)
+#         if 'vector_index' in locals(): # Check if vector_index exists (files were uploaded)
+#             docs = vector_index.get_relevant_documents(question)
+#         else:
+#             docs = []  # No documents to provide
 
-#             use_agent = st.checkbox("Use Agent for Web Search (experimental)", value=False)
+#         # Define Prompt Template
+#         prompt_template = """
+#         You are a helpful AI assistant helping people answer their Cloud development and
+#         deployment questions. Answer the question as detailed as possible from the provided context,
+#         make sure to provide all the details and code if possible, if the answer is not in
+#         provided context use your  knowledge or imagine an answer but never say that you don't have an answer
+#         or can't provide an answer based on current context ",
 
-#             if use_agent:
-#                 response_text = generate_response_agent(question, vector_index, st.session_state.memory, llm)
-#             else:
-#                 # --- MODIFIED PROMPT TEMPLATE ---
-#                 prompt_template = """
-#                 You are a helpful AI assistant helping people answer their Cloud development and
-#                 deployment questions. Answer the question as detailed as possible from the provided context,
-#                 make sure to provide all the details and code if possible.  If the answer is not in
-#                 provided context, use your knowledge. Always cite your sources from the context using the filename.
+#         Context:\n {context}?\n
+#         Question: \n{question}\n
+#         Answer:
+#         """
 
-#                 Context:
-#                 {context}
+#         # Create Prompt
+#         prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
 
-#                 Question: {question}
-#                 Answer:
-#                 """
-#                 prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
+#         # Load QA Chain
+#         model = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0, api_key=google_api_key,
+#                                        client_options={"api_endpoint": "generativelanguage.googleapis.com"})
 
-#                 # --- Using the QA Chain ---
-#                 chain = load_qa_chain(llm, chain_type="stuff", prompt=prompt, memory=st.session_state.memory)
+#         chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
 
-#                 if vector_index:
-#                     docs = vector_index.get_relevant_documents(question)
-#                 else:
-#                     docs = []
+#         # Get Response
+#         response = chain({"input_documents": docs, "question": question}, return_only_outputs=True)
 
-#                 # --- Correctly pass inputs to the chain ---
-#                 response = chain({"input_documents": docs, "question": question, "chat_history": []}, return_only_outputs=True) #Pass chat history
-#                 response_text = response['output_text']
-
-
-
-#                 # --- (No need for the separate qa_with_sources function anymore) ---
-
-#             st.session_state.messages.append({"role": "assistant", "content": response_text})
-#             with st.chat_message("assistant"):
-#                 st.write(response_text)
-
-#         # --- Feedback ---
-#         col1, col2, _ = st.columns([1, 1, 10])
-#         with col1:
-#             if st.button("👍", key="up"):
-#                 st.session_state.messages.append({"role": "feedback", "content": "👍"})
-#                 st.toast("Thank you for your feedback!", icon="👍")
-
-#         with col2:
-#             if st.button("👎", key="down"):
-#                 st.session_state.messages.append({"role": "feedback", "content": "👎"})
-#                 st.toast("Thank you for your feedback!", icon="👎")
-                
+#         # Add assistant response to chat history
+#         st.session_state.messages.append({"role": "assistant", "content": response['output_text']})
+#         # Display assistant response in chat message container
+#         with st.chat_message("assistant"):
+#             st.write(response['output_text'])
 with tab1:
     # --- Example Questions ---
     st.markdown("**Example Questions:**")
     st.markdown("""
-    1.  What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions, and when should I choose one over the others for a serverless project?
-    2.  I need to design a highly available and scalable web application architecture using GCP. Can you suggest a suitable architecture diagram and explain the role of each component, including load balancing, auto-scaling, and database choices?
+    1.  What are the key differences between AWS Lambda, Azure Functions, and Google Cloud Functions?
+    2.  Suggest a highly available web application architecture using GCP and explain each component.
     """)
+    
     # --- CUSTOM CSS FOR CHATBOX ---
     st.markdown(
         """
@@ -827,101 +797,92 @@ with tab1:
         div[data-baseweb="textarea"] {
             height: 70px !important; /* Adjust height as needed */
         }
-        
-     
-        
         </style>
         """,
         unsafe_allow_html=True,
     )
     
     # --- File Upload ---
-    st.caption("Although not necessary, you can upload your PDFs here to get more accurate answers/code")
+    st.caption("For context-aware answers, you can upload your PDF documents here.")
     uploaded_files = st.file_uploader("Upload PDF files", type=["pdf"], accept_multiple_files=True)
 
-
-    if uploaded_files:
-        st.text("PDF Files Uploaded Successfully!")
-
-        # Combine all PDF content
-        all_texts = []
-        for uploaded_file in uploaded_files:
-            # PDF Processing
-            pdf_data = uploaded_file.read()
-            pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_data))
-            pdf_pages = pdf_reader.pages
-
-            # Extract text from all pages and add to the combined context
-            context = "\n\n".join(page.extract_text() for page in pdf_pages)
-            all_texts.append(context)
-
-        # Combine all contexts into a single string
-        combined_context = "\n\n".join(all_texts)
-
-        # Split Texts
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=200)
-        texts = text_splitter.split_text(combined_context)
-
-        # Chroma Embeddings
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-        vector_index = Chroma.from_texts(texts, embeddings).as_retriever()
+    # Process PDFs if they are uploaded and store the retriever in session state
+    if uploaded_files and "vector_index" not in st.session_state:
+        with st.spinner("Processing PDF files... this may take a moment."):
+            all_texts = []
+            for uploaded_file in uploaded_files:
+                try:
+                    pdf_data = uploaded_file.read()
+                    pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_data))
+                    context = "\n\n".join(page.extract_text() for page in pdf_reader.pages)
+                    all_texts.append(context)
+                except Exception as e:
+                    st.error(f"Error reading {uploaded_file.name}: {e}")
+            
+            if all_texts:
+                combined_context = "\n\n".join(all_texts)
+                text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=200)
+                texts = text_splitter.split_text(combined_context)
+                embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+                # Store the vector index in the session state
+                st.session_state.vector_index = Chroma.from_texts(texts, embeddings).as_retriever()
+                st.success("PDF files processed successfully!")
 
     # Initialize chat history
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-    # Display chat messages from history
+    # --- NEW: Display chat messages from history with avatars ---
     for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
+        avatar = "👤" if message["role"] == "user" else "🤖"
+        with st.chat_message(message["role"], avatar=avatar):
             st.markdown(message["content"])
 
-   
-
     # Get user input
-    if question := st.chat_input("Ask your Cloud related questions here."):
-        # Add user message to chat history
+    if question := st.chat_input("Ask your Cloud related questions here..."):
+        # Add user message to chat history and display it
         st.session_state.messages.append({"role": "user", "content": question})
-        # Display user message in chat message container
-        with st.chat_message("user"):
+        with st.chat_message("user", avatar="👤"):
             st.markdown(question)
 
-        # Get Relevant Documents (only if files were uploaded)
-        if 'vector_index' in locals(): # Check if vector_index exists (files were uploaded)
-            docs = vector_index.get_relevant_documents(question)
-        else:
-            docs = []  # No documents to provide
+        # --- NEW: Display thinking indicator and generate response ---
+        with st.chat_message("assistant", avatar="🤖"):
+            placeholder = st.empty()
+            placeholder.markdown("🧠 Thinking...")
+            
+            # Get relevant documents if PDFs were uploaded
+            docs = []
+            if "vector_index" in st.session_state:
+                docs = st.session_state.vector_index.get_relevant_documents(question)
+            
+            # Define Prompt Template
+            prompt_template = """
+            You are a helpful AI assistant helping people answer their Cloud development and
+            deployment questions. Answer the question as detailed as possible from the provided context,
+            make sure to provide all the details and code if possible, if the answer is not in
+            provided context use your knowledge but never say that you don't have an answer
+            or can't provide an answer based on current context.
 
-        # Define Prompt Template
-        prompt_template = """
-        You are a helpful AI assistant helping people answer their Cloud development and
-        deployment questions. Answer the question as detailed as possible from the provided context,
-        make sure to provide all the details and code if possible, if the answer is not in
-        provided context use your  knowledge or imagine an answer but never say that you don't have an answer
-        or can't provide an answer based on current context ",
+            Context:\n {context}?\n
+            Question: \n{question}\n
+            Answer:
+            """
+            prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
 
-        Context:\n {context}?\n
-        Question: \n{question}\n
-        Answer:
-        """
+            # Load Model and Chain
+            model = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0, api_key=google_api_key,
+                                           client_options={"api_endpoint": "generativelanguage.googleapis.com"})
+            chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
 
-        # Create Prompt
-        prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
-
-        # Load QA Chain
-        model = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0, api_key=google_api_key,
-                                       client_options={"api_endpoint": "generativelanguage.googleapis.com"})
-
-        chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
-
-        # Get Response
-        response = chain({"input_documents": docs, "question": question}, return_only_outputs=True)
-
-        # Add assistant response to chat history
+            # Get Response
+            response = chain({"input_documents": docs, "question": question}, return_only_outputs=True)
+            
+            # Update the placeholder with the final response
+            placeholder.markdown(response['output_text'])
+        
+        # Add the final assistant response to the chat history
         st.session_state.messages.append({"role": "assistant", "content": response['output_text']})
-        # Display assistant response in chat message container
-        with st.chat_message("assistant"):
-            st.write(response['output_text'])
-
+        
 with release_notes_tab:
     st.header("Cloud Current Release Notes 📜")
     st.markdown("""
