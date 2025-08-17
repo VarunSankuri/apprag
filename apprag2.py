@@ -890,6 +890,14 @@ with release_notes_tab:
 
     ---
 
+    ### August 17, 2025 — v2.6: UI & UX Polish
+    * **✨ New Feature: Professional Sidebar!** The app now features a dedicated sidebar for a cleaner look. It houses the app logo, a "How-to" guide, and general information, moving clutter away from the main page.
+    * **🎨 UI/UX: Enhanced Chat Experience:** The chat interface is now more dynamic and user-friendly.
+        * Added user (👤) and assistant (🤖) avatars to make the conversation more engaging.
+        * Implemented a '🧠 Thinking...' indicator to provide immediate feedback while the assistant generates a response.
+
+    ---
+
     ### August 10, 2025 — v2.5
     * **🚀 Model Upgrade:** The app is now powered by the state-of-the-art **Gemini 2.5 Pro**! Expect more nuanced, accurate, and faster responses across all features.
     * **⚙️ Enhancement:** Optimized the PDF processing logic for faster embedding and retrieval in the "Cloud Expert Chat".
@@ -916,20 +924,4 @@ with release_notes_tab:
     ---
 
     ### February 18, 2025 — v1.5
-    * **🚀 Model Upgrade:** Upgraded the core model to **Gemini 1.5 Pro**, significantly improving the accuracy of answers, especially for code generation and context-heavy questions from PDFs.
-    * **⚙️ Enhancement:** Increased the file size limit for PDF uploads.
-
-    ---
-    
-    ### December 9, 2024 — v1.2
-    * **✨ New Feature:** You can now **upload your own PDF documents**! Cloud Current can now answer questions based on your custom documentation, architectural diagrams, and reports.
-    * **✨ New Feature:** Added a "Summarize PDFs" button for quick overviews of uploaded content.
-
-    ---
-    
-    ### October 28, 2024 — v1.0: Liftoff! 🎉
-    * **🚀 Launch:** The first version of **Cloud Current** is live!
-    * **✨ Core Feature:** A conversational AI assistant focused on providing up-to-date answers to cloud development and deployment questions on AWS, GCP, and Azure.
-    """)
-
-    
+    * **🚀 Model Upgrade:** Upgraded the core model to **Gemini 1.5 Pro**, significantly improving the accuracy of answers, especially for code generation and context
