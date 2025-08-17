@@ -102,7 +102,7 @@ def generate_response_agent(question, vector_index, memory, llm):
         response = "An error occurred with the Agent"
     return response
 
-st.title("Cloud Current 2.0")
+st.title("Cloud Current 2.5")
 st.markdown("""
 <style>
 .big-font {
