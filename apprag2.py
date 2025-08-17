@@ -29,12 +29,11 @@ chromadb.api.client.SharedSystemClient.clear_system_cache()
 
 # --- SIDEBAR ---
 with st.sidebar:
-    # To add a logo, save an image file in the same directory and use st.image()
-    # For example: st.image("logo.png") 
+    st.image("image1.png", use_column_width=True)
     st.title("Cloud Current 2.5")
     st.info(
         "This app is a comprehensive toolkit for cloud professionals and students, "
-        "powered by Google Gemini. Use the tabs above to navigate between features."
+        "powered by Google Gemini."
     )
 
 # Function to validate email format
