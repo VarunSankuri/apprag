@@ -1,8 +1,10 @@
 streamlit
 langchain
+langchain-core
 langchain-community
 langchain-google-genai
-google-generativeai
+langchain-text-splitters
+langchain-classic
 python-dotenv
 PyPDF2
 pysqlite3-binary
@@ -10,7 +12,4 @@ chromadb
 pandas
 plotly
 graphviz
-duckduckgo-search
 google-api-core
-langchain-core
-langchain-text-splitters
