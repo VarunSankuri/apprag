@@ -1,6 +1,6 @@
 import streamlit as st
 from langchain_core.prompts import PromptTemplate
-from langchain.chains.question_answering import load_qa_chain
+from langchain.chains import load_qa_chain
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 # from langchain.vectorstores import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
