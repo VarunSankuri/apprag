@@ -58,75 +58,75 @@ def is_valid_email(email):
     pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
     return re.match(pattern, email) is not None
 
-def process_pdfs(uploaded_files):
-    """Processes uploaded PDF files, extracts text, and creates embeddings."""
-    if not uploaded_files:
-        return None
+# def process_pdfs(uploaded_files):
+#     """Processes uploaded PDF files, extracts text, and creates embeddings."""
+#     if not uploaded_files:
+#         return None
 
-    all_texts = []
-    for uploaded_file in uploaded_files:
-        try:
-            pdf_data = uploaded_file.read()
-            pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_data))
-            context = "\n\n".join(page.extract_text() for page in pdf_reader.pages)
-            all_texts.append(context)
-        except PyPDF2.errors.PdfReadError:
-            st.error(f"Error reading {uploaded_file.name}.  Please ensure it is a valid PDF.")
-            return None
-        except Exception as e:
-            st.error(f"An unexpected error occurred processing {uploaded_file.name}: {e}")
-            return None
-    combined_context = "\n\n".join(all_texts)
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=200)
-    texts = text_splitter.split_text(combined_context)
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-    return Chroma.from_texts(texts, embeddings).as_retriever()
+#     all_texts = []
+#     for uploaded_file in uploaded_files:
+#         try:
+#             pdf_data = uploaded_file.read()
+#             pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_data))
+#             context = "\n\n".join(page.extract_text() for page in pdf_reader.pages)
+#             all_texts.append(context)
+#         except PyPDF2.errors.PdfReadError:
+#             st.error(f"Error reading {uploaded_file.name}.  Please ensure it is a valid PDF.")
+#             return None
+#         except Exception as e:
+#             st.error(f"An unexpected error occurred processing {uploaded_file.name}: {e}")
+#             return None
+#     combined_context = "\n\n".join(all_texts)
+#     text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=200)
+#     texts = text_splitter.split_text(combined_context)
+#     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+#     return Chroma.from_texts(texts, embeddings).as_retriever()
 
-def generate_response_with_sources(question, vector_index, llm):
-    """Generates a response with source citations."""
-    if vector_index:
-        docs = vector_index.get_relevant_documents(question)
-    else:
-        docs = []
+# def generate_response_with_sources(question, vector_index, llm):
+#     """Generates a response with source citations."""
+#     if vector_index:
+#         docs = vector_index.get_relevant_documents(question)
+#     else:
+#         docs = []
 
-    prompt_template = """
-    You are a helpful AI assistant helping people answer their Cloud development and 
-    deployment questions. Answer the question as detailed as possible from the provided context, 
-    make sure to provide all the details and code if possible, if the answer is not in 
-    provided context use your  knowledge or imagine an answer but never say that you don't have an answer
-    or can't provide an answer based on current context
-    """
-    prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
-    responses = []
-    for doc in docs:
-         source = os.path.basename(doc.metadata.get('source', 'Unknown Source'))
-         answer = llm.predict(prompt.format(context=doc.page_content, question=question))
-         responses.append(f"Answer (Source: {source}): {answer}")
+#     prompt_template = """
+#     You are a helpful AI assistant helping people answer their Cloud development and 
+#     deployment questions. Answer the question as detailed as possible from the provided context, 
+#     make sure to provide all the details and code if possible, if the answer is not in 
+#     provided context use your  knowledge or imagine an answer but never say that you don't have an answer
+#     or can't provide an answer based on current context
+#     """
+#     prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
+#     responses = []
+#     for doc in docs:
+#          source = os.path.basename(doc.metadata.get('source', 'Unknown Source'))
+#          answer = llm.predict(prompt.format(context=doc.page_content, question=question))
+#          responses.append(f"Answer (Source: {source}): {answer}")
 
-    if not responses:
-        return llm.predict(prompt.format(context="", question=question))
-    return "\n\n".join(responses)
+#     if not responses:
+#         return llm.predict(prompt.format(context="", question=question))
+#     return "\n\n".join(responses)
 
-def generate_response_agent(question, vector_index, memory, llm):
-    """Generates a response using an agent."""
-    if vector_index:
-         docs = vector_index.get_relevant_documents(question)
-    else:
-         docs = []
-    search = DuckDuckGoSearchRun()
-    tools = [search]
-    agent_chain = initialize_agent(tools,llm, agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory)
+# def generate_response_agent(question, vector_index, memory, llm):
+#     """Generates a response using an agent."""
+#     if vector_index:
+#          docs = vector_index.get_relevant_documents(question)
+#     else:
+#          docs = []
+#     search = DuckDuckGoSearchRun()
+#     tools = [search]
+#     agent_chain = initialize_agent(tools,llm, agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION, verbose=True, memory=memory)
 
-    if docs:
-         context_str = "\n\n".join([f"Context from {os.path.basename(doc.metadata.get('source', 'Unknown Source'))}:\n{doc.page_content}" for doc in docs])
-         full_input = f"{context_str}\n\nQuestion: {question}"
-    else:
-         full_input = question
-    try:
-        response = agent_chain.run(input=full_input)
-    except:
-        response = "An error occurred with the Agent"
-    return response
+#     if docs:
+#          context_str = "\n\n".join([f"Context from {os.path.basename(doc.metadata.get('source', 'Unknown Source'))}:\n{doc.page_content}" for doc in docs])
+#          full_input = f"{context_str}\n\nQuestion: {question}"
+#     else:
+#          full_input = question
+#     try:
+#         response = agent_chain.run(input=full_input)
+#     except:
+#         response = "An error occurred with the Agent"
+#     return response
 
 st.title("Cloud Current 2.5")
 st.markdown("""
