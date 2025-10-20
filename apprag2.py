@@ -1,6 +1,7 @@
+# --- START: Replace all your imports with this block ---
 import streamlit as st
 from langchain_core.prompts import PromptTemplate
-from langchain.chains import load_qa_chain
+from langchain_classic.chains import load_qa_chain
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 # from langchain.vectorstores import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
@@ -26,6 +27,7 @@ from langchain_community.tools import DuckDuckGoSearchRun
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 import chromadb
 chromadb.api.client.SharedSystemClient.clear_system_cache()
+# --- END: Your import block is now correct ---
 
 # --- SIDEBAR ---
 # --- SIDEBAR CONFIGURATION ---
