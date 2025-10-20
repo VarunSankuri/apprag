@@ -12,3 +12,5 @@ plotly
 graphviz
 duckduckgo-search
 google-api-core
+langchain-core
+langchain-text-splitters
