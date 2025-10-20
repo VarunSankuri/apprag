@@ -1,4 +1,5 @@
 # --- START: Use this new import block ---
+from langchain_core.output_parsers import StrOutputParser
 import streamlit as st
 from langchain_core.prompts import PromptTemplate
 from langchain_classic.chains.question_answering import load_qa_chain
@@ -27,7 +28,7 @@ chromadb.api.client.SharedSystemClient.clear_system_cache()
 # --- SIDEBAR ---
 # --- SIDEBAR CONFIGURATION ---
 with st.sidebar:
-    st.image("image1.png", use_container_width=True)
+    st.image("image1.png", width='stretch')
     st.title("Cloud Current 2.5")
 
     st.subheader("How to Use This App")
@@ -308,7 +309,7 @@ with tab4:
         Evaluation and Feedback:""" 
 
         # Get the response
-        response = model.predict(prompt)
+        response = model.invoke(prompt).content
 
         # Add assistant response to chat history
         st.session_state.messages_tab3.append({"role": "user", "content": question})  # <-- Changed variable name
@@ -866,19 +867,29 @@ with tab1:
             """
             prompt = PromptTemplate(template=prompt_template, input_variables=['context', 'question'])
 
-            # Load Model and Chain
+            # Load Model
             model = ChatGoogleGenerativeAI(model="gemini-2.5-pro", temperature=0, api_key=google_api_key,
                                            client_options={"api_endpoint": "generativelanguage.googleapis.com"})
-            chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
-
-            # Get Response
-            response = chain({"input_documents": docs, "question": question}, return_only_outputs=True)
             
+            # --- START: NEW LCEL CHAIN (Fixes deprecation warnings) ---
+            output_parser = StrOutputParser()
+            chain = prompt | model | output_parser
+
+            # Manually "stuff" the docs into the context variable
+            if docs:
+                context = "\n\n".join([doc.page_content for doc in docs])
+            else:
+                context = "No context provided." # Or just an empty string
+
+            # Get Response using .invoke()
+            response_text = chain.invoke({"context": context, "question": question})
+            # --- END: NEW LCEL CHAIN ---
+
             # Update the placeholder with the final response
-            placeholder.markdown(response['output_text'])
+            placeholder.markdown(response_text)
         
         # Add the final assistant response to the chat history
-        st.session_state.messages.append({"role": "assistant", "content": response['output_text']})
+        st.session_state.messages.append({"role": "assistant", "content": response_text})
         
 with release_notes_tab:
     st.header("Cloud Current Release Notes 📜")
